@@ -1,0 +1,402 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  height: 100%;
+  color: #364294;
+}
+
+#name-ute {
+    margin-left: 20px;
+    float: left;
+}
+#header {
+    margin-top: 10px;
+}
+#name-ute h5 {
+    font: 16px Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: #145fb0;
+}
+#name-ute h4 {
+    font: 21px Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #145fb0;
+    margin-top: 5px;
+}
+#name-ute h6 {
+    font: 18px "Trebuchet MS", Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #f9051e;
+    padding-top: 5px;
+    margin-top: 5px;
+    border-top: 3px solid #1360ae;
+    width: 440px;
+    text-shadow: 0 1px 0 #ccc,
+        0 2px 1px rgba(0, 0, 0, .1),
+        0 2px 1px rgba(0, 0, 0, .2),
+        0 1px 1px rgba(0, 0, 0, .2),
+        0 2px 2px rgba(0, 0, 0, .2);
+}
+
+#search-bar {
+    float: right;
+    margin-top: 55px;
+}
+#search-bar input {
+    border: 1px #2e6da4 solid;
+    text-color: #2e6da4;
+}
+#btn-submit {
+    top: 0px;
+}
+.input-group-btn {
+    width: 0%;
+}
+
+#narbar {
+    background: #364294;
+    height: 30px;
+}
+/*footer*/
+
+.footer {
+    position: absolute;
+    color: #bbb;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    border-top: 3px #364294 solid;
+}
+#copy-right{
+    float: left;
+}
+#address{
+    float: right;
+    display: inline;
+    color:black;
+}
+
+/*main login*/
+
+.form{
+    display: table;
+    width:100%;
+    height: 94%;
+}
+#form_login{
+    display: table-cell;
+   text-align: center;
+   vertical-align: middle;
+}
+/* main region */
+#main-region{
+    border-radius:10px;
+    height:100%;
+    margin-top:10px;
+    margin-bottom:10px;
+} 
+.textBold{
+    color:#364294;
+}
+.textnormal{
+    color:#364294;
+}
+
+#fogetpass{
+    text-align: center;
+}
+
+/* navbar*/
+
+.info-user{
+    float: right;
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    right: 0px;
+    z-index: 1;
+    border: 1px #364294 solid;
+    border-radius:10px;
+}
+.dropdown-content a {
+    color: #364294;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Show the dropdown menu on hover */
+.info-user:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.info-user:hover .btn-dropdown {
+    background-color: white;
+}
+.info-user:hover .info{
+    color: #364294;
+}
+.btn-dropdown{
+    height: 30px;
+    border:none ;
+    background-color:transparent;
+}
+.info{
+    color:white;
+}
+
+
+/*calendar */
+
+.block {
+    padding: 6px;
+    min-height: 20px;
+    margin-bottom: 20px;
+    border:1px solid #e3e3e3;
+    border-radius:5px;
+}
+.block .minicalendar .calendartable,.block .minicalendar .calendar-controls{
+    max-width: 280px;
+    margin: 0 auto;
+    width: 100%;
+}
+.block .minicalendar .caption {
+    text-align: center;
+}
+.block .calendar-controls .previous {
+    text-align: left;
+    width: 12%;
+}
+.block .calendar-controls .current, .block .calendar-controls .next, .block .calendar-controls .previous {
+    float: left;
+}
+.block a {
+    color: #364294;
+}
+.block .calendar-controls .current {
+    text-align: center;
+    width: 76%;
+}
+.block .calendar-controls .next {
+    text-align: right;
+    width: 12%;
+}
+
+.block .calendartable td, .block .calendartable th {
+    padding: 2px;
+    font-size: .8em;
+    text-align: center;
+}
+.block .calendartable td, .calendartable th {
+    padding: 5px 0;
+    border: 1px dotted #e1e1e1;
+}
+
+.title-calendar, .title-notify, .title-content{
+    text-align:center;
+    font-size:18px;
+    border-bottom:1px solid #e3e3e3;
+    margin-bottom:3px;
+}
+
+/* Noitify*/
+.time-notify-left{
+    float:right;
+}
+.day-notify{
+    text-align:right;
+}
+/* main content*/
+.main-content{
+    border:1px solid #e3e3e3;
+    min-height:calc(100vh - 204px);
+    border-radius:5px;
+    margin-bottom:10px;
+    padding:3px;
+}
+.table-content{
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+}
+.table-content .last-item-table{
+    text-align:center;
+    
+}
+.table-content .last-item-table a{
+    color:#364294;
+}
+/* Tao de nghi*/ 
+textarea {
+    resize: none;
+}
+
+.btn-choose{
+    background-color:white;
+    border:1px solid #e3e3e3;
+}
+.detail-car{
+    border:1px solid rgb(204, 204, 204);
+    border-radius:5px;
+    padding:5px;
+    margin-top:5px;
+    font-size:12px;
+}
+
+.date-picker{
+    height: 32px;
+}
+#many-day{
+    
+}
+
+.padding-left-zero{
+    padding-left: 0px;;
+}
+.padding-right-zero{
+    padding-right: 0px;;
+}
+
+/*tab */
+.text-center > th, .text-center > td{
+    text-align:center;
+}
+
+/* show info driver*/
+
+.driver-info {
+    
+    text-align:left;
+}
+
+.driver-info > td {
+    border: 1px solid rgb(221, 221, 221);
+}
+.driver-info > strong {
+    float :right;
+}
+
+
+/*new*/
+.title-content2{
+    margin-bottom:3px;
+    padding: 0px 8px 3px 8px;
+    border-bottom:1px solid #e3e3e3;
+}
+.date-picker2{
+    height:25px;
+}
+.set-height-25{
+    height:25px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+a i{
+    color:#364294;
+}
+
+.padding-zero{
+    padding:0px;
+}
+/* list notify*/
+
+.list-notify .item-notify div{
+    font-size:14px;
+}
+.list-notify .item-notify p{
+    font-size:13px;
+}
+.list-notify a:hover {
+    text-decoration:none;
+}
+.list-notify a{
+	text-decoration:none;
+}
+.list-notify .item-notify:hover{
+    background: #e3e3e3;
+}
+.time-ago{
+    margin-top:3px;
+    color:#8f98d6;
+}
+
+
+
+
+.time2{
+    height: 32px;
+}
+
+
+.btn-dropdown-page{
+    height: 30px;
+    background: transparent;
+    color: white;
+    border: none;
+    padding:6px 12px;
+}
+
+.btn-dropdown-page:focus,.btn-dropdown-page:hover{
+    background-color:white;
+    color:#364294;
+}
+
+
+
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0px;    
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;    
+}
+.image-preview-input input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.image-preview-input-title {
+    margin-right:2px;
+}
+
+
+/*color vaildate*/
+.error{
+	color:red;
+}
+.show-all-notify{
+    text-align:center;
+    border-top:1px solid #e3e3e3;
+    padding-top:3px;
+}
+
+.myClickableThingy {
+    cursor: pointer;
+}
+
+.list-notify>td{
+	padding-bottom : 0px;
+}
+
+
+

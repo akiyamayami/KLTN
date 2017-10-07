@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: TLCN
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: isla
+Implementation-Vendor-Id: com.tlcn
+Build-Jdk: 1.8.0_141
+Implementation-URL: http://projects.spring.io/spring-boot/TLCN/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

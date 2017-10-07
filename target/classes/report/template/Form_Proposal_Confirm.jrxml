@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Form_Proposal_Confirm" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="554880b9-fd28-45fe-a5ef-defd015be8b0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<field name="ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[proposalID]]></fieldDescription>
+	</field>
+	<field name="NameUser" class="java.lang.String">
+		<fieldDescription><![CDATA[nameUser]]></fieldDescription>
+	</field>
+	<field name="Destination" class="java.lang.String">
+		<fieldDescription><![CDATA[destination]]></fieldDescription>
+	</field>
+	<field name="PickupTimeAndLocation" class="java.lang.String">
+		<fieldDescription><![CDATA[pickupTimeAndLocation]]></fieldDescription>
+	</field>
+	<field name="TimeUse" class="java.lang.String">
+		<fieldDescription><![CDATA[timeUse]]></fieldDescription>
+	</field>
+	<field name="NameProposal" class="java.lang.String">
+		<fieldDescription><![CDATA[nameProposal]]></fieldDescription>
+	</field>
+	<field name="DateCreate" class="java.lang.String">
+		<fieldDescription><![CDATA[dateCreate]]></fieldDescription>
+	</field>
+	<background>
+		<band height="440" splitType="Stretch">
+			<image>
+				<reportElement x="60" y="0" width="440" height="440" uuid="a032c39d-1ca0-48d3-bb72-864ebe79ae69"/>
+				<imageExpression><![CDATA["src/main/webapp/static/img/spkt2.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="103" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="0" width="240" height="20" uuid="8f3f8703-9bef-4a0c-a610-35722b849597"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="20" y="20" width="240" height="20" uuid="ce93dfe1-1bc0-49bb-809a-52ce3e865798"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[THÀNH PHỐ HỒ CHÍ MINH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="300" y="20" width="230" height="20" uuid="7f2599c9-203e-43bc-9563-d6e5dfd80ab9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Độc lập - Tự do - Hạnh phúc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="300" y="0" width="230" height="20" uuid="b61d9a29-ea12-4c3b-8a3d-ec30f54c6f46"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="70" width="400" height="20" uuid="c047e0e1-1217-488e-9519-4495736996b4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="14" isBold="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[PHIẾU YÊU CẦU ĐIỀU XE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="321" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="40" y="20" width="170" height="20" uuid="61d17be1-a090-4123-8d07-859271d20da5"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Họ tên người sử dụng xe :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="40" width="170" height="20" uuid="67e01e1c-05ff-4851-915d-58f80f7e6f6b"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Nơi đến :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="60" width="170" height="20" uuid="e2e1520d-0b7b-4af5-9e6f-2d5c5184c00d"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Nội dung :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="80" width="170" height="20" uuid="bc7ce181-dbad-4ddd-a3ce-079e0b559224"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Địa điểm và thời gian đón :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="100" width="170" height="20" uuid="a01604bf-0b59-4ae8-b0f3-1ea32ea9c495"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Thời gian sủ dụng :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="210" y="20" width="300" height="20" uuid="016f1107-67e9-4984-a2e9-2c79753afa1b"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NameUser}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="40" width="300" height="20" uuid="a8acac57-0632-4a1d-9622-f5b39e63ae49"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Destination}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="60" width="300" height="20" uuid="2d7d198f-ce46-485f-9c45-eeb678a40e9b"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NameProposal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="80" width="300" height="20" uuid="32758182-b633-4acc-a123-87acd2260154"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PickupTimeAndLocation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="100" width="300" height="20" uuid="756d9816-e620-4d40-aaac-7fde115b6f07"/>
+				<textElement>
+					<font fontName="Arial Unicode MS" size="13" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TimeUse}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="300" y="190" width="230" height="20" uuid="1fa46112-1b27-466b-b1e2-3b087f5c1717"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="false" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Ký tên]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="300" y="170" width="230" height="20" uuid="a28eff07-62a9-4991-bebd-877689cabdbf"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[$F{DateCreate}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="20" y="190" width="240" height="20" uuid="dc879669-b891-4b90-9d89-e2096e065660"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" isUnderline="false" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Họ tên người thực hiện]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="170" width="240" height="20" uuid="146e2e69-9d6e-45b2-a8f3-e969620dc8b7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Unicode MS" size="12" isBold="true" pdfFontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[PHÒNG THIẾT BỊ - VẬT TƯ]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

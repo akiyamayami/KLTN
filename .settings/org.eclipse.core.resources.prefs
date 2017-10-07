@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/resources/messages_en.properties=UTF-8
+encoding//src/main/resources/report/template/Blank_Form_Proposal.jrxml=UTF-8
+encoding//src/main/resources/report/template/Form_Proposal.jrxml=UTF-8
+encoding//src/main/resources/report/template/Form_Proposal_Confirm.jrxml=UTF-8
+encoding//src/main/resources/report/template/Report_Proposal.jrxml=UTF-8
+encoding//src/main/resources/report/template/Report_car_stt.jrxml=UTF-8
+encoding//src/test/java=UTF-8
+encoding/<project>=UTF-8
