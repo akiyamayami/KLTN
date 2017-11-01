@@ -216,7 +216,12 @@ public class ProposalService {
 	public List<Proposal> getListProposalExpired(){
 		return proposalRepository.listProposalExpired();
 	}
-	
+	public List<Proposal> getListProposalAreProcessing(){
+		List<Proposal> listArePropocessing = findAll().parallelStream()
+				.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 && isInTimeUse(p))
+				.collect(Collectors.toList());
+		return listArePropocessing;
+	}
 	private List<Proposal> getListFilter(ModelFilterProposal filter, User user){
 		System.out.println("stt" + filter.getStt() + ", " + filter.getType() + "," + filter.getDatecreate()  );
 		Date datecreate = filter.getDatecreate();

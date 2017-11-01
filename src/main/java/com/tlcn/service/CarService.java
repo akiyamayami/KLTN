@@ -102,7 +102,6 @@ public class CarService {
 	public List<Car> findListFilter_Type_Seat(String type, int seats){
 		return carRepository.getListFilter_Type_Seat(type, seats);
 	}
-	
 	public void remove(Car car){
 		carRepository.delete(car);
 	}

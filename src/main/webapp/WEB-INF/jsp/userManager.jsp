@@ -11,15 +11,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Car Manager</title>
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet" />
 <link href="static/css/main.css" rel="stylesheet" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css" rel="stylesheet" />
-
-
-
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css"
+	rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css"
+	rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css"
+	rel="stylesheet" />
 </head>
 <body>
 	<t:header>
@@ -30,14 +37,10 @@
 			<div class="row">
 				<div class="col-sm-9">
 					<c:if test="${not empty messagesSuc}">
-						<h1 id="error" class="alert alert-danger">
-							${messagesSuc}
-						</h1>
+						<h1 id="error" class="alert alert-danger">${messagesSuc}</h1>
 					</c:if>
 					<c:if test="${not empty messagesEro}">
-						<h1 id="error" class="alert alert-success">
-							${messagesEro}
-						</h1>
+						<h1 id="error" class="alert alert-success">${messagesEro}</h1>
 					</c:if>
 					<div class="main-content">
 						<c:choose>
@@ -46,11 +49,11 @@
 									<div class="row">
 										Quản lý Người dùng
 										<sec:authorize access="hasAuthority('ADD_USER')">
-										<div class="col-sm-1" style="float: right; margin-top: 3px;">
-											<a href="/add-new-user" data-toggle="tooltip"
-												data-placement="top" title="Thêm người dùng mới"><i
-												class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
-										</div>
+											<div class="col-sm-1" style="float: right; margin-top: 3px;">
+												<a href="/add-new-user" data-toggle="tooltip"
+													data-placement="top" title="Thêm người dùng mới"><i
+													class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
+											</div>
 										</sec:authorize>
 									</div>
 								</div>
@@ -66,7 +69,7 @@
 											<sec:authorize access="hasAuthority('REMOVE_USER')">
 												<th style="width: 6%;">Xóa</th>
 											</sec:authorize>
-											
+
 										</tr>
 									</thead>
 									<tbody>
@@ -83,7 +86,7 @@
 												</sec:authorize>
 												<sec:authorize access="hasAuthority('REMOVE_USER')">
 													<td><a href="/remove-user/${user.email}/"> <i
-														class="fa fa-trash fa-lg" aria-hidden="true"></i>
+															class="fa fa-trash fa-lg" aria-hidden="true"></i>
 													</a></td>
 												</sec:authorize>
 											</tr>
@@ -95,7 +98,8 @@
 							<c:when test="${MODE == 'MODE_ADD_USER'}">
 								<div class="title-content">Thêm người dùng</div>
 								<form:form modelAttribute="User" class="form-horizontal"
-									action="/add-new-user" method="post" enctype="multipart/form-data">
+									action="/add-new-user" method="post"
+									enctype="multipart/form-data">
 									<div class="form-group">
 										<label class="control-label col-sm-3">Email</label>
 										<div class="col-sm-7">
@@ -201,16 +205,18 @@
 									<div class="form-group">
 										<label class="control-label col-sm-3">Tên</label>
 										<div class="col-sm-7">
-											<form:input path="name" disabled="true" type="text" class="form-control" />
+											<form:input path="name" disabled="true" type="text"
+												class="form-control" />
 											<div class="has-error">
 												<form:errors class="control-label" path="name" />
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-sm-3" >SDT</label>
+										<label class="control-label col-sm-3">SDT</label>
 										<div class="col-sm-7">
-											<form:input path="phone" type="number" disabled="true" class="form-control" />
+											<form:input path="phone" type="number" disabled="true"
+												class="form-control" />
 											<div class="has-error">
 												<form:errors class="control-label" path="phone" />
 											</div>
@@ -295,8 +301,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label col-sm-3">Confirm
-											password</label>
+										<label class="control-label col-sm-3">Confirm password</label>
 										<div class="col-sm-7">
 											<form:input type="password" class="form-control"
 												path='passwordconfirm' placeholder="Enter confirm password" />
@@ -307,7 +312,8 @@
 											</div>
 										</div>
 									</div>
-									<div style="display: none;text-algin:center;" id="hint" class="form-group">
+									<div style="display: none; text-algin: center;" id="hint"
+										class="form-group">
 										<div class="col-sm-offset-4 col-sm-4 ">
 											<div>
 												Hint: <a href="https://goo.gl/iHyHHP">Click me</a>
@@ -316,7 +322,8 @@
 									</div>
 									<div class="form-group">
 										<div class="col-sm-offset-5 col-sm-3">
-											<button type="submit" class="btn btn-default">Update Password</button>
+											<button type="submit" class="btn btn-default">Update
+												Password</button>
 											<a href="/" class="btn btn-default">Trở về</a>
 										</div>
 									</div>
@@ -325,7 +332,8 @@
 							<c:otherwise>
 								<div class="title-content">Thông tin cá nhân</div>
 								<form:form modelAttribute="User" class="form-horizontal"
-									action="/edit-profile" method="post" enctype="multipart/form-data">
+									action="/edit-profile" method="post"
+									enctype="multipart/form-data">
 									<div class="form-group">
 										<label class="control-label col-sm-3">Email</label>
 										<div class="col-sm-7">
@@ -389,10 +397,10 @@
 													data-trigger="fileinput"
 													style="width: 200px; height: 150px;"></div>
 												<div>
-													<span class="btn btn-default btn-file"> 
-													<span class="fileinput-new">Select image</span> 
-													<span class="fileinput-exists">Change</span> 
-													<form:input type="file" path="file" /></span> <a
+													<span class="btn btn-default btn-file"> <span
+														class="fileinput-new">Select image</span> <span
+														class="fileinput-exists">Change</span> <form:input
+															type="file" path="file" /></span> <a
 														class="btn btn-default fileinput-exists myClickableThingy"
 														data-dismiss="fileinput">Remove</a>
 												</div>
@@ -421,17 +429,24 @@
 		</div>
 	</div>
 	<t:footer></t:footer>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.1.1/pwstrength-bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
-	
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+	<script type="text/javascript"
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.1.1/pwstrength-bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="static/js/ViewImageUpload.js"></script>
 	<script type="text/javascript" src="static/js/main.js"></script>
 	<script type="text/javascript" src="static/js/validate.js"></script>
-	
+
 </body>
 </html>

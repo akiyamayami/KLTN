@@ -44,6 +44,7 @@ import com.tlcn.validator.CarValidator;
 import com.tlcn.validator.DriverValidator;
 import com.tlcn.validator.ModelCarValidator;
 import com.tlcn.model.Driver;
+import com.tlcn.model.Proposal;
 import com.tlcn.model.SttCar;
 import com.tlcn.model.User;
 
@@ -87,7 +88,13 @@ public class CarController {
 		model.addAttribute("listtype", listtype);
 		model.addAttribute("listseats", listseats);
 	}
-	
+	@RequestMapping(value="/tracking-cars", method = RequestMethod.GET)
+	public String trackingCar(Model model){
+		List<Proposal> ListProposalAreProcessing = proposalService.getListProposalAreProcessing();
+		System.out.println("size list = " + ListProposalAreProcessing.size());
+		model.addAttribute("listProposal", ListProposalAreProcessing);
+		return "tracking";
+	}
 	// page find-car
 	@RequestMapping(value="/find-cars", method = RequestMethod.GET)
 	public String findCar(Model model) throws Exception{

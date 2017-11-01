@@ -401,4 +401,14 @@ a i{
 }
 
 
+.info-driver img{
+    padding: 5px;
+}
+.info-driver:hover{
+    border-radius:5px;
+    background: #e3e3e3;
+}
+#map{
+	height: 600px;
+}
 

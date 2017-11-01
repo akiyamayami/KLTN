@@ -1,4 +1,5 @@
-	<%@ page language="java" contentType="text/html; charset=UTF-8"
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
@@ -10,14 +11,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Home</title>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet" type="text/css" />
 <link href="static/css/main.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css"
+	rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<t:header>
@@ -29,7 +40,8 @@
 				<div class="col-sm-9">
 					<div class="main-content">
 						<c:choose>
-							<c:when test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
+							<c:when
+								test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
 								<c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
 									<div class="title-content">
 										<div class="row">Tìm đề nghị</div>
@@ -40,9 +52,9 @@
 										<div class="row">
 											Đề nghị của tôi
 											<div class="col-sm-1" style="float: right; margin-top: 3px;">
-												<a href="/create-proposal" data-toggle="tooltip" data-placement="top"
-													title="Tạo đề nghị"><i class="fa fa-plus fa-lg"
-													aria-hidden="true"></i></a>
+												<a href="/create-proposal" data-toggle="tooltip"
+													data-placement="top" title="Tạo đề nghị"><i
+													class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
 											</div>
 										</div>
 									</div>
@@ -106,36 +118,35 @@
 											<tr>
 												<td>${stt.index + 1 }</td>
 												<td><c:out value="${list.name}" /></td>
-												<td><c:out value="${list.usefromdate}" /> đến <c:out value="${list.usetodate}" /></td>
+												<td><c:out value="${list.usefromdate}" /> đến <c:out
+														value="${list.usetodate}" /></td>
 												<td><c:out value="${list.userregister.dateregister}" /></td>
 												<td><c:out value="${list.type.name}" /></td>
-												<td><c:out value="${list.stt.name}"/> </td>
-												<td class="last-item-table"><a class="myClickableThingy"
-													data-toggle="tooltip" data-placement="right"
-													data-html="true" title='<c:out value="${list.detail}"/>'>
-														<i class="fa fa-info-circle fa-lg" aria-hidden="true"></i>
+												<td><c:out value="${list.stt.name}" /></td>
+												<td class="last-item-table"><a
+													class="myClickableThingy" data-toggle="tooltip"
+													data-placement="right" data-html="true"
+													title='<c:out value="${list.detail}"/>'> <i
+														class="fa fa-info-circle fa-lg" aria-hidden="true"></i>
 												</a></td>
 
 												<c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
-													<td class="last-item-table">
-														<a href="/change-proposal-${list.proposalID}"> 
-															<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-														</a>
-													</td>
-													<td class="last-item-table">
-														<c:if test="${ !list.expired && list.type.typeID != 3}">
-															<a href="/cancel-proposal-${list.proposalID}"> 
-																<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+													<td class="last-item-table"><a
+														href="/change-proposal-${list.proposalID}"> <i
+															class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+													</a></td>
+													<td class="last-item-table"><c:if
+															test="${ !list.expired && list.type.typeID != 3}">
+															<a href="/cancel-proposal-${list.proposalID}"> <i
+																class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
 															</a>
-														</c:if>
-													</td>
+														</c:if></td>
 												</c:if>
 												<c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
-													<th style="width: 5%;" class="last-item-table">
-														<a href="/confirm-proposal-${list.proposalID}">
-															<i class="fa fa-pencil" aria-hidden="true"></i>
-														</a>
-													</th>
+													<th style="width: 5%;" class="last-item-table"><a
+														href="/confirm-proposal-${list.proposalID}"> <i
+															class="fa fa-pencil" aria-hidden="true"></i>
+													</a></th>
 												</c:if>
 											</tr>
 										</c:forEach>
@@ -144,65 +155,77 @@
 								<div class="row">
 									<div class="col-sm-12">
 										<nav class="pull-right">
-											<ul class="pagination justify-content-end">
-												<c:choose>
-													<c:when test="${pageNumber != 1}">
-														<li class="page-item"><a class="page-link"
+										<ul class="pagination justify-content-end">
+											<c:choose>
+												<c:when test="${pageNumber != 1}">
+													<li class="page-item"><a class="page-link"
 														href="?page=${pageNumber - 1}" tabindex="-1">Previous</a></li>
-													</c:when>
-													<c:otherwise>
-														<li class="page-item disabled"><a class="page-link"
+												</c:when>
+												<c:otherwise>
+													<li class="page-item disabled"><a class="page-link"
 														href="#" tabindex="-1">Previous</a></li>
-													</c:otherwise>
-												</c:choose>
-												<c:choose>
-													<c:when test="${pageNumber == 1}">
-														<c:forEach var="i" begin="${pageNumber}" 
-															end="${(numberOfPages < 3)? numberOfPages : 3 }" >
-															<c:choose>
-																<c:when test="${i == pageNumber}">
-																	<li class="page-item active"><a class="page-link myClickableThingy">${i}</a></li>
-																</c:when>
-																<c:otherwise>
-																	<li class="page-item"><a class="page-link" href="?page=${i}">${i}</a></li>
-																</c:otherwise>
-															</c:choose>
-														</c:forEach>
-													</c:when>
-													<c:when test="${pageNumber ==  numberOfPages}">
-														<c:forEach var="i" begin="${(numberOfPages < 3)? 1 : numberOfPages - 3}" 
-															end="${pageNumber}" >
-															<c:choose>
-																<c:when test="${i == pageNumber}">
-																	<li class="page-item active"><a class="page-link myClickableThingy">${i}</a></li>
-																</c:when>
-																<c:otherwise>
-																	<li class="page-item"><a class="page-link" href="?page=${i}">${i}</a></li>
-																</c:otherwise>
-															</c:choose>
-														</c:forEach>
-													</c:when>
-													<c:otherwise>
-														<li class="page-item"><a class="page-link" href="?page=${pageNumber - 1 }">${pageNumber - 1 }</a></li>
-														<li class="page-item active"><a class="page-link myClickableThingy">${pageNumber}</a></li>
-														<li class="page-item"><a class="page-link" href="?page=${pageNumber + 1 }">${pageNumber + 1 }</a></li>
-													</c:otherwise>
-												</c:choose>
-												<c:choose>
-													<c:when test="${pageNumber ==  numberOfPages || numberOfPages == 1}">
-														<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-													</c:when>
-													<c:otherwise>
-														<li class="page-item"><a class="page-link" href="?page=${pageNumber + 1 }">Next</a></li>
-													</c:otherwise>
-												</c:choose>
-											</ul>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when test="${pageNumber == 1}">
+													<c:forEach var="i" begin="${pageNumber}"
+														end="${(numberOfPages < 3)? numberOfPages : 3 }">
+														<c:choose>
+															<c:when test="${i == pageNumber}">
+																<li class="page-item active"><a
+																	class="page-link myClickableThingy">${i}</a></li>
+															</c:when>
+															<c:otherwise>
+																<li class="page-item"><a class="page-link"
+																	href="?page=${i}">${i}</a></li>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
+												</c:when>
+												<c:when test="${pageNumber ==  numberOfPages}">
+													<c:forEach var="i"
+														begin="${(numberOfPages < 3)? 1 : numberOfPages - 3}"
+														end="${pageNumber}">
+														<c:choose>
+															<c:when test="${i == pageNumber}">
+																<li class="page-item active"><a
+																	class="page-link myClickableThingy">${i}</a></li>
+															</c:when>
+															<c:otherwise>
+																<li class="page-item"><a class="page-link"
+																	href="?page=${i}">${i}</a></li>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
+												</c:when>
+												<c:otherwise>
+													<li class="page-item"><a class="page-link"
+														href="?page=${pageNumber - 1 }">${pageNumber - 1 }</a></li>
+													<li class="page-item active"><a
+														class="page-link myClickableThingy">${pageNumber}</a></li>
+													<li class="page-item"><a class="page-link"
+														href="?page=${pageNumber + 1 }">${pageNumber + 1 }</a></li>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when
+													test="${pageNumber ==  numberOfPages || numberOfPages == 1}">
+													<li class="page-item disabled"><a class="page-link"
+														href="#">Next</a></li>
+												</c:when>
+												<c:otherwise>
+													<li class="page-item"><a class="page-link"
+														href="?page=${pageNumber + 1 }">Next</a></li>
+												</c:otherwise>
+											</c:choose>
+										</ul>
 										</nav>
 									</div>
 
 								</div>
 							</c:when>
-							<c:when test='${MODE == "MODE_CREATE_PROPOSAL" || MODE == "MODE_CHANGE_PROPOSAL"}'>
+							<c:when
+								test='${MODE == "MODE_CREATE_PROPOSAL" || MODE == "MODE_CHANGE_PROPOSAL"}'>
 								<c:if test='${MODE == "MODE_CREATE_PROPOSAL"}'>
 									<div class="title-content">Tạo Đề nghị</div>
 								</c:if>
@@ -226,7 +249,7 @@
 											</div>
 										</div>
 									</c:if>
-									
+
 									<div class="form-group">
 										<label class="control-label col-sm-3">Tên</label>
 										<div class="col-sm-7">
@@ -235,7 +258,7 @@
 												<form:errors class="control-label" path="name" />
 											</div>
 										</div>
-										
+
 									</div>
 									<div class="form-group">
 										<label class="control-label col-sm-3">Nơi đến</label>
@@ -246,7 +269,7 @@
 												<form:errors class="control-label" path="destination" />
 											</div>
 										</div>
-										
+
 									</div>
 									<div class="form-group">
 										<label class="control-label col-sm-3">Địa điểm đón</label>
@@ -257,7 +280,7 @@
 												<form:errors class="control-label" path="pickuplocation" />
 											</div>
 										</div>
-										
+
 									</div>
 									<div class="form-group">
 										<label class="control-label col-sm-3">Thời gian đón</label>
@@ -273,7 +296,7 @@
 												<form:errors class="control-label" path="pickuptime" />
 											</div>
 										</div>
-										
+
 									</div>
 									<div class="form-group">
 										<label class="control-label col-sm-3">Chi Tiết</label>
@@ -284,7 +307,7 @@
 												<form:errors class="control-label" path="detail" />
 											</div>
 										</div>
-										
+
 									</div>
 									<div class="form-group">
 										<label class="control-label col-sm-3">Xe</label>
@@ -299,14 +322,15 @@
 													</form:option>
 												</c:forEach>
 											</form:select>
-											<i class="fa fa-info-circle fa-lg icon-show-detail myClickableThingy"
+											<i
+												class="fa fa-info-circle fa-lg icon-show-detail myClickableThingy"
 												aria-hidden="true"></i>
 											<div class="has-error">
 												<form:errors class="control-label" path="carID" />
 											</div>
 										</div>
 										<div class="col-sm-offset-3 col-sm-7">
-											<div >
+											<div>
 												<c:forEach items="${carsAvailble}" var="listcar">
 													<div class="col-sm-12 detail-car"
 														id='detail-car-<c:out value="${listcar.carID}"/>'>
@@ -458,7 +482,8 @@
 									<div class="form-group">
 										<label class="control-label col-sm-3">Tên</label>
 										<div class="col-sm-7">
-											<form:input disabled="true" path="name" type="text" class="form-control" />
+											<form:input disabled="true" path="name" type="text"
+												class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -479,7 +504,8 @@
 										<label class="control-label col-sm-3">Thời gian đón</label>
 										<div class="col-sm-7">
 											<div class="input-group bootstrap-timepicker timepicker">
-												<form:input disabled="true" path="pickuptime" id="pickuptime" type="text"
+												<form:input disabled="true" path="pickuptime"
+													id="pickuptime" type="text"
 													class="form-control input-small" />
 												<span class="input-group-addon"> <i
 													class="glyphicon glyphicon-time"></i>
@@ -490,8 +516,8 @@
 									<div class="form-group">
 										<label class="control-label col-sm-3">Chi Tiết</label>
 										<div class="col-sm-7">
-											<form:textarea disabled="true" path="detail" id="detail" class="form-control"
-												cols="30" rows="10"></form:textarea>
+											<form:textarea disabled="true" path="detail" id="detail"
+												class="form-control" cols="30" rows="10"></form:textarea>
 										</div>
 									</div>
 									<div class="form-group">
@@ -507,195 +533,8 @@
 													</option>
 												</c:forEach>
 											</form:select>
-											<i class="fa fa-info-circle fa-lg icon-show-deital myClickableThingy"
-												aria-hidden="true"></i>
-										</div>
-										<div class="col-sm-offset-3 col-sm-7">
-											<div >
-												<c:forEach items="${carsAvailble}" var="listcar">
-													<div class="col-sm-12 detail-car"
-														id='detail-car-<c:out value="${listcar.carID}"/>'>
-														<div class="col-sm-2">
-															<img
-																src='static/img/user/<c:out value="${listcar.driver.email}"/>.jpg'
-																width="70px" height="80px">
-														</div>
-														<div class="col-sm-5 padding-zero">
-															<div class="col-sm-6">
-																<p>
-																	<strong>Tên :</strong>
-																</p>
-																<p>
-																	<strong>Email :</strong>
-																</p>
-																<p>
-																	<strong>Ngày sinh :</strong>
-																</p>
-															</div>
-															<div class="col-sm-6 padding-zero">
-																<p>
-																	<c:out value="${listcar.driver.name}" />
-																	/p>
-																<p>
-																	<c:out value="${listcar.driver.email}" />
-																</p>
-																<p>
-																	<c:out value="${listcar.driver.birthday}" />
-																</p>
-															</div>
-														</div>
-														<div class="col-sm-5 padding-zero">
-															<div class="col-sm-6 padding-zero">
-																<p>
-																	<strong>SĐT :</strong>
-																</p>
-																<p>
-																	<strong>Kinh nghiệm :</strong>
-																</p>
-																<p>
-																	<strong>Bằng Lái :</strong>
-																</p>
-															</div>
-															<div class="col-sm-6 padding-zero">
-																<p>
-																	<c:out value="${listcar.driver.phone}" />
-																</p>
-																<p>
-																	<c:out value="${listcar.driver.experience}" />
-																	năm
-																</p>
-																<p>
-																	<c:out value="${listcar.driver.license}" />
-																</p>
-															</div>
-														</div>
-													</div>
-												</c:forEach>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Thời gian sử
-											dụng</label>
-										<div class="col-sm-9">
-											<div class="col-sm-2 padding-zero">
-												<form:input disabled="true" path="usefromdate" id="usefromdate" type="text"
-													class="form-control date-picker" />
-											</div>
-											<div class="col-sm-3 padding-right-zero">
-												<div class="input-group bootstrap-timepicker timepicker">
-													<form:input disabled="true" path="usefromtime" id="usefromtime" type="text"
-														class="form-control input-small time2" />
-													<span class="input-group-addon"> <i
-														class="glyphicon glyphicon-time"></i>
-													</span>
-												</div>
-											</div>
-											<label class="control-label col-sm-1"
-												style="text-align: center;">-</label>
-											<div class="col-sm-2 padding-zero">
-												<form:input disabled="true" id="usetodate" path="usetodate" type="text"
-													class="form-control date-picker" />
-											</div>
-											<div class="col-sm-3 padding-right-zero">
-												<div class="input-group bootstrap-timepicker timepicker">
-													<form:input disabled="true" type="text" path="usetotime" id="usetotime"
-														class="form-control input-small time2" />
-													<span class="input-group-addon"> <i
-														class="glyphicon glyphicon-time"></i>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Tệp đính kèm</label>
-										<c:choose>
-											<c:when test='${Proposal.fileexist == true}'>
-												<a href="/static/file/${Proposal.proposalID}.pdf"
-												class="control-label col-sm-3" style="text-align: left;"
-												download>File</a>
-											</c:when>
-											<c:otherwise>
-												<label class="control-label">Không có tệp đính kèm</label>
-											</c:otherwise>
-										</c:choose>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-5 col-sm-4">
-											<c:if test="${Proposal.stt.sttproposalID == 0}">
-												<button type="submit" name="type" value="confirm"
-												class="btn btn-default">Duyệt</button>
-											</c:if>
-											<a href="/" class="btn btn-default">Trở về</a>
-										</div>
-									</div>
-								</form:form>
-							</c:when>
-							<c:when test="${MODE == 'MODE_PROPOSAL_EXPIRED'}">
-								<form:form method="post" modelAttribute="Proposal"
-									action="${typeForm}" class="form-horizontal"
-									enctype="multipart/form-data">
-									<c:if test="${not empty message}">
-										<div class="form-group">
-											<div style="color: red; font-size: 15px; text-align: center;">
-												<c:out value="${message}" />
-											</div>
-										</div>
-									</c:if>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Tên</label>
-										<div class="col-sm-7">
-											<form:input disabled="true" path="name" type="text" class="form-control" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Nơi đến</label>
-										<div class="col-sm-7">
-											<form:input disabled="true" path="destination" type="text"
-												class="form-control" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Địa điểm đón</label>
-										<div class="col-sm-7">
-											<form:input disabled="true" path="pickuplocation" type="text"
-												class="form-control" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Thời gian đón</label>
-										<div class="col-sm-7">
-											<div class="input-group bootstrap-timepicker timepicker">
-												<form:input disabled="true" path="pickuptime" id="pickuptime" type="text"
-													class="form-control input-small" />
-												<span class="input-group-addon"> <i
-													class="glyphicon glyphicon-time"></i>
-												</span>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Chi Tiết</label>
-										<div class="col-sm-7">
-											<form:textarea disabled="true" path="detail" id="detail" class="form-control"
-												cols="30" rows="10"></form:textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-sm-3">Xe</label>
-										<div class="col-sm-7">
-											<form:select disabled="true" id="choicecar" path="carID"
-												class="btn btn-choose">
-												<c:forEach items="${carsAvailble}" var="listcar">
-													<option value='<c:out value="${listcar.carID}"/>'>
-														<c:out value="${listcar.licenseplate}" /> -
-														<c:out value="${listcar.type}" /> -
-														<c:out value="${listcar.seats}" /> Chỗ
-													</option>
-												</c:forEach>
-											</form:select>
-											<i class="fa fa-info-circle fa-lg icon-show-deital myClickableThingy"
+											<i
+												class="fa fa-info-circle fa-lg icon-show-deital myClickableThingy"
 												aria-hidden="true"></i>
 										</div>
 										<div class="col-sm-offset-3 col-sm-7">
@@ -767,12 +606,14 @@
 											dụng</label>
 										<div class="col-sm-9">
 											<div class="col-sm-2 padding-zero">
-												<form:input disabled="true" path="usefromdate" id="usefromdate" type="text"
+												<form:input disabled="true" path="usefromdate"
+													id="usefromdate" type="text"
 													class="form-control date-picker" />
 											</div>
 											<div class="col-sm-3 padding-right-zero">
 												<div class="input-group bootstrap-timepicker timepicker">
-													<form:input disabled="true" path="usefromtime" id="usefromtime" type="text"
+													<form:input disabled="true" path="usefromtime"
+														id="usefromtime" type="text"
 														class="form-control input-small time2" />
 													<span class="input-group-addon"> <i
 														class="glyphicon glyphicon-time"></i>
@@ -782,13 +623,13 @@
 											<label class="control-label col-sm-1"
 												style="text-align: center;">-</label>
 											<div class="col-sm-2 padding-zero">
-												<form:input disabled="true" id="usetodate" path="usetodate" type="text"
-													class="form-control date-picker" />
+												<form:input disabled="true" id="usetodate" path="usetodate"
+													type="text" class="form-control date-picker" />
 											</div>
 											<div class="col-sm-3 padding-right-zero">
 												<div class="input-group bootstrap-timepicker timepicker">
-													<form:input disabled="true" type="text" path="usetotime" id="usetotime"
-														class="form-control input-small time2" />
+													<form:input disabled="true" type="text" path="usetotime"
+														id="usetotime" class="form-control input-small time2" />
 													<span class="input-group-addon"> <i
 														class="glyphicon glyphicon-time"></i>
 													</span>
@@ -801,8 +642,201 @@
 										<c:choose>
 											<c:when test='${Proposal.fileexist == true}'>
 												<a href="/static/file/${Proposal.proposalID}.pdf"
-												class="control-label col-sm-3" style="text-align: left;"
-												download>File</a>
+													class="control-label col-sm-3" style="text-align: left;"
+													download>File</a>
+											</c:when>
+											<c:otherwise>
+												<label class="control-label">Không có tệp đính kèm</label>
+											</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-offset-5 col-sm-4">
+											<c:if test="${Proposal.stt.sttproposalID == 0}">
+												<button type="submit" name="type" value="confirm"
+													class="btn btn-default">Duyệt</button>
+											</c:if>
+											<a href="/" class="btn btn-default">Trở về</a>
+										</div>
+									</div>
+								</form:form>
+							</c:when>
+							<c:when test="${MODE == 'MODE_PROPOSAL_EXPIRED'}">
+								<form:form method="post" modelAttribute="Proposal"
+									action="${typeForm}" class="form-horizontal"
+									enctype="multipart/form-data">
+									<c:if test="${not empty message}">
+										<div class="form-group">
+											<div style="color: red; font-size: 15px; text-align: center;">
+												<c:out value="${message}" />
+											</div>
+										</div>
+									</c:if>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Tên</label>
+										<div class="col-sm-7">
+											<form:input disabled="true" path="name" type="text"
+												class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Nơi đến</label>
+										<div class="col-sm-7">
+											<form:input disabled="true" path="destination" type="text"
+												class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Địa điểm đón</label>
+										<div class="col-sm-7">
+											<form:input disabled="true" path="pickuplocation" type="text"
+												class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Thời gian đón</label>
+										<div class="col-sm-7">
+											<div class="input-group bootstrap-timepicker timepicker">
+												<form:input disabled="true" path="pickuptime"
+													id="pickuptime" type="text"
+													class="form-control input-small" />
+												<span class="input-group-addon"> <i
+													class="glyphicon glyphicon-time"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Chi Tiết</label>
+										<div class="col-sm-7">
+											<form:textarea disabled="true" path="detail" id="detail"
+												class="form-control" cols="30" rows="10"></form:textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Xe</label>
+										<div class="col-sm-7">
+											<form:select disabled="true" id="choicecar" path="carID"
+												class="btn btn-choose">
+												<c:forEach items="${carsAvailble}" var="listcar">
+													<option value='<c:out value="${listcar.carID}"/>'>
+														<c:out value="${listcar.licenseplate}" /> -
+														<c:out value="${listcar.type}" /> -
+														<c:out value="${listcar.seats}" /> Chỗ
+													</option>
+												</c:forEach>
+											</form:select>
+											<i
+												class="fa fa-info-circle fa-lg icon-show-deital myClickableThingy"
+												aria-hidden="true"></i>
+										</div>
+										<div class="col-sm-offset-3 col-sm-7">
+											<div>
+												<c:forEach items="${carsAvailble}" var="listcar">
+													<div class="col-sm-12 detail-car"
+														id='detail-car-<c:out value="${listcar.carID}"/>'>
+														<div class="col-sm-2">
+															<img
+																src='static/img/user/<c:out value="${listcar.driver.email}"/>.jpg'
+																width="70px" height="80px">
+														</div>
+														<div class="col-sm-5 padding-zero">
+															<div class="col-sm-6">
+																<p>
+																	<strong>Tên :</strong>
+																</p>
+																<p>
+																	<strong>Email :</strong>
+																</p>
+																<p>
+																	<strong>Ngày sinh :</strong>
+																</p>
+															</div>
+															<div class="col-sm-6 padding-zero">
+																<p>
+																	<c:out value="${listcar.driver.name}" />
+																	/p>
+																<p>
+																	<c:out value="${listcar.driver.email}" />
+																</p>
+																<p>
+																	<c:out value="${listcar.driver.birthday}" />
+																</p>
+															</div>
+														</div>
+														<div class="col-sm-5 padding-zero">
+															<div class="col-sm-6 padding-zero">
+																<p>
+																	<strong>SĐT :</strong>
+																</p>
+																<p>
+																	<strong>Kinh nghiệm :</strong>
+																</p>
+																<p>
+																	<strong>Bằng Lái :</strong>
+																</p>
+															</div>
+															<div class="col-sm-6 padding-zero">
+																<p>
+																	<c:out value="${listcar.driver.phone}" />
+																</p>
+																<p>
+																	<c:out value="${listcar.driver.experience}" />
+																	năm
+																</p>
+																<p>
+																	<c:out value="${listcar.driver.license}" />
+																</p>
+															</div>
+														</div>
+													</div>
+												</c:forEach>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Thời gian sử
+											dụng</label>
+										<div class="col-sm-9">
+											<div class="col-sm-2 padding-zero">
+												<form:input disabled="true" path="usefromdate"
+													id="usefromdate" type="text"
+													class="form-control date-picker" />
+											</div>
+											<div class="col-sm-3 padding-right-zero">
+												<div class="input-group bootstrap-timepicker timepicker">
+													<form:input disabled="true" path="usefromtime"
+														id="usefromtime" type="text"
+														class="form-control input-small time2" />
+													<span class="input-group-addon"> <i
+														class="glyphicon glyphicon-time"></i>
+													</span>
+												</div>
+											</div>
+											<label class="control-label col-sm-1"
+												style="text-align: center;">-</label>
+											<div class="col-sm-2 padding-zero">
+												<form:input disabled="true" id="usetodate" path="usetodate"
+													type="text" class="form-control date-picker" />
+											</div>
+											<div class="col-sm-3 padding-right-zero">
+												<div class="input-group bootstrap-timepicker timepicker">
+													<form:input disabled="true" type="text" path="usetotime"
+														id="usetotime" class="form-control input-small time2" />
+													<span class="input-group-addon"> <i
+														class="glyphicon glyphicon-time"></i>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Tệp đính kèm</label>
+										<c:choose>
+											<c:when test='${Proposal.fileexist == true}'>
+												<a href="/static/file/${Proposal.proposalID}.pdf"
+													class="control-label col-sm-3" style="text-align: left;"
+													download>File</a>
 											</c:when>
 											<c:otherwise>
 												<label class="control-label">Không có tệp đính kèm</label>
@@ -819,22 +853,23 @@
 							<c:when test="${MODE == 'MODE_SHOW_ALL_NOTIFY' }">
 								<script type="text/javascript" src="static/js/loading-icon.js"></script>
 								<style type="text/css">
-									.list-notify .item-notify2 div {
-										color: #364294;
-										font-size: 14px;
-									}
-									
-									.list-notify .item-notify2 p {
-										font-size: 13px;
-									}
-									
-									.list-notify a:hover {
-										text-decoration: none;
-									}
-									.list-notify td {
-										padding-bottom : 0px;
-									}
-								</style>
+.list-notify .item-notify2 div {
+	color: #364294;
+	font-size: 14px;
+}
+
+.list-notify .item-notify2 p {
+	font-size: 13px;
+}
+
+.list-notify a:hover {
+	text-decoration: none;
+}
+
+.list-notify td {
+	padding-bottom: 0px;
+}
+</style>
 								<div class="title-content">
 									<div class="row">Thông báo của bạn</div>
 								</div>
@@ -874,17 +909,20 @@
 						</c:choose>
 					</div>
 				</div>
-			<t:notifyandcalendar></t:notifyandcalendar>
+				<t:notifyandcalendar></t:notifyandcalendar>
+			</div>
 		</div>
 	</div>
-	</div>
 	<t:footer></t:footer>
-	
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
-	
-	
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+
+
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="static/js/validate.js"></script>
 	<script type="text/javascript" src="static/js/main.js"></script>
 </body>

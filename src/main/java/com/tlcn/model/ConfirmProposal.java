@@ -15,21 +15,21 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity(name="confirmproposal")
+@Entity(name = "confirmproposal")
 public class ConfirmProposal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int confrimproposalID;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="emailuser")
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "emailuser")
 	private User userconfirm;
-	
+
 	@OneToOne
-	@JoinColumn(name="proposalID",unique=true)
+	@JoinColumn(name = "proposalID", unique = true)
 	private Proposal proposalapproved;
-	
+
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date dateconfirm;
@@ -84,6 +84,5 @@ public class ConfirmProposal {
 	public void setDateconfirm(Date dateconfirm) {
 		this.dateconfirm = dateconfirm;
 	}
-	
-	
+
 }
