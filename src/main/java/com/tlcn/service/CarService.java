@@ -79,16 +79,6 @@ public class CarService {
 		for(Car c : y ){
 			System.out.println(c.getCarID());
 		}
-				
-				
-		/*	
-		Set<Car> x = new HashSet<>(listProposal.parallelStream()
-				.filter(p -> p.getStt().getSttproposalID() == 1 
-					&& p.getType().getTypeID() != 3 
-					&& !isBetween(TimeFrom,timeTo,getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()))
-					&& p.getCar().getSttcar().getSttcarID() == 1)
-				.map(Proposal::getCar)
-				.collect(Collectors.toList()));*/
 		List<Car> cars = new ArrayList<>(y);
 		return cars;
  	}
@@ -122,14 +112,6 @@ public class CarService {
 								.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 
 								&& (getDate(p.getUsefromdate(), p.getUsefromtime()) >= timeNow || proposalService.isInTimeUse(p)))
 								.collect(Collectors.toList()))));
-		/*
-		 * List<Proposal> listProposal = proposalService.getListProposalReady();
-		 * if (listProposal.isEmpty()) return null; List<ModelCarReady>
-		 * listCarReady = new ArrayList<>(); for (Proposal p : listProposal) {
-		 * System.out.println(p.getCar().getLicenseplate());
-		 * listCarReady.add(new ModelCarReady(p.getCar().getLicenseplate(), p));
-		 * }
-		 */
 		return listcarready;
 	}
 	public void converAndSave(ModelCreateorChangeCar car){

@@ -111,10 +111,10 @@ public class DriverController {
 		System.out.println(file.getOriginalFilename());
 		System.out.println(file.isEmpty());
 		System.out.println(file.getSize());
-		if(file != null){
+		if(!file.isEmpty()){
 			String location = request.getServletContext().getRealPath("static") + "/img/user/";
 			String name = file.getOriginalFilename();
-			String namefile = driver.getEmail() + name.substring(name.lastIndexOf("."),name.length());
+			String namefile = driver.getEmail() + name.substring(name.lastIndexOf("."),name.length()-1);
 			System.out.println(namefile);
 			uploadfile(file,location,namefile);
 		}
@@ -188,7 +188,7 @@ public class DriverController {
 		
 		
 		MultipartFile file = modelDriver.getFile();
-		if(file != null && file.getSize() > 0){
+		if(!file.isEmpty()){
 			String location = request.getServletContext().getRealPath("static") + "/img/user/";
 			String name = file.getOriginalFilename();
 			String namefile = driver.getEmail() + name.substring(name.lastIndexOf("."),name.length());

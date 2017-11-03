@@ -34,7 +34,6 @@ function initMap(proposalID, database) {
 			path = flightPath.getPath();
 			for ( var key in arr) {
 				path.push(new google.maps.LatLng(arr[key].lat, arr[key].lng));
-				console.log(arr[key]);
 			}
 			var lastAdress = arr.pop();
 			map.setCenter(new google.maps.LatLng(lastAdress.lat,

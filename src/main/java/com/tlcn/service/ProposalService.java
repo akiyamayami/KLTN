@@ -326,7 +326,6 @@ public class ProposalService {
 		dateTime.set(Cdate.get(Calendar.YEAR), Cdate.get(Calendar.MONTH), Cdate.get(Calendar.DATE), 
 				Ctime.get(Calendar.HOUR_OF_DAY), Ctime.get(Calendar.MINUTE));
 		return dateTime.getTime().getTime();
-		
 	}
 	
 	public ModelFormProposal genarateFormProposal(Proposal proposal){
@@ -355,7 +354,6 @@ public class ProposalService {
 		stream.close();
 		return true;
 	}
-	
 	public boolean isConfirmProposal(Proposal proposal){
 		if(proposal.getStt().getSttproposalID() == 1)
 			return true;
