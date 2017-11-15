@@ -71,9 +71,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     			messages.getMessage("message.proposalNotFound", null, request.getLocale()), 
     			HttpStatus.NOT_FOUND.value(),HttpStatus.NOT_FOUND.getReasonPhrase()));
     	return "messageException";
-    	/*logger.error("404 Status Code", ex);
-    	final GenericResponse bodyOfResponse = new GenericResponse(messages.getMessage("message.proposalNotFound", null, request.getLocale()), "ProposalNotFound");
-    	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);*/
     }
     
     @ExceptionHandler({ DriverNotFoundException.class })

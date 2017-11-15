@@ -55,11 +55,11 @@ public class ProposalService {
 	public void saveProposal(ModelCreateorChangeProposal model, User user, HttpServletRequest request)
 			throws MultipartException, IOException {
 		System.out.println("Save Proposal");
-		Car carRegistered = carService.findOne(model.getCarID());
-		long count = carService
-				.findListCarAvailableInTime(getDate(model.getUsefromdate(), model.getUsefromtime()),
-						getDate(model.getUsetodate(), model.getUsetotime()))
-				.parallelStream().filter(x -> x.equals(carRegistered)).count();
+//		Car carRegistered = carService.findOne(model.getCarID());
+//		long count = carService
+//				.findListCarAvailableInTime(getDate(model.getUsefromdate(), model.getUsefromtime()),
+//						getDate(model.getUsetodate(), model.getUsetotime()))
+//				.parallelStream().filter(x -> x.equals(carRegistered)).count();
 		Proposal proposalnew = null;
 		System.out.println("Save Proposal 1");
 		proposalnew = new Proposal(typeProposalService.findOne(1), model.getName(), model.getDetail(),
@@ -82,10 +82,15 @@ public class ProposalService {
 		RegisterProposal register = new RegisterProposal(user, proposalnew, new Date());
 		registerProposalService.save(register);
 		proposalnew.setUserregister(register);
-		proposalRepository.save(proposalnew);
-		System.out.println("Save Proposal 7");
-		notifyEventService.addNotifyToBGMAndPTBVT(proposalnew);
-
+		if(user.getRoleUser().getRoleID() == 2 || user.getRoleUser().getRoleID() == 3)
+		{
+			proposalnew.setStt(sttProposalService.findOne(1));
+			proposalRepository.save(proposalnew);
+		}else {
+			proposalRepository.save(proposalnew);
+			System.out.println("Save Proposal 7");
+			notifyEventService.addNotifyToBGMAndPTBVT(proposalnew);
+		}
 	}
 	public boolean updateProposal(int proposalID,ModelCreateorChangeProposal model, HttpServletRequest request){
 		try{

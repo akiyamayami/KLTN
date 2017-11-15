@@ -3,9 +3,11 @@ package com.tlcn.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -13,10 +15,12 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import com.tlcn.security.CustomAccessDeniedHandler;
 import com.tlcn.security.MyLogoutSuccessHandler;
-import com.tlcn.security.MySimpleUrlAuthenticationSuccessHandler;
+import com.tlcn.security.MySavedRequestAwareAuthenticationSuccessHandler;
+import com.tlcn.security.RestAuthenticationEntryPoint;
 import com.tlcn.service.UserService;
 
 @Configuration
@@ -26,7 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private UserService userDetailsService;
 	
 	@Autowired
-	private MySimpleUrlAuthenticationSuccessHandler mySimpleUrlAuthenticationSuccessHandler;
+    private MySavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
+	
 	@Autowired
 	private MyLogoutSuccessHandler myLogoutSuccessHandler;
 	
@@ -63,13 +68,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/create-proposal","/cancel-proposal").hasAuthority("CREATE_PROPOSAL")
 			.antMatchers("/check-stt-cars","/find-cars").hasAuthority("CHECK_OR_FIND_CARS")
 			.antMatchers("/update-password*").hasAuthority("CHANGE_PASSWORD")
+			.antMatchers("/api/v1/test").hasAnyAuthority("CREATE_PROPOSAL")
 			.antMatchers("/invalidSession*").anonymous()
 		.and()
 		.formLogin()
 			.loginPage("/login")
+			.successHandler(authenticationSuccessHandler)
 			.defaultSuccessUrl("/")
-			.failureUrl("/login?error=true")
-			.successHandler(mySimpleUrlAuthenticationSuccessHandler)
+			.failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"))
 			.permitAll()
         .and()
 		.logout()
@@ -78,16 +84,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	        .invalidateHttpSession(false)
 	        .deleteCookies("JSESSIONID")
 	        .logoutSuccessHandler(myLogoutSuccessHandler)
-        .permitAll()
+	        .permitAll()
         .and()
 		.sessionManagement()
 	        .invalidSessionUrl("/invalidSession")
 	        .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
             .sessionFixation().none()
         .and()
-        .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
+        	.httpBasic().realmName("XXX").authenticationEntryPoint(getBasicAuthEntryPoint())
+		.and()
+        	.exceptionHandling()
+        	.accessDeniedHandler(customAccessDeniedHandler);
+        	
 	}
-	
+
 	
 	@Bean
     public PasswordEncoder encoder() {
@@ -101,6 +111,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    authProvider.setPasswordEncoder(encoder());
 	    return authProvider;
 	}
+	
+	@Bean
+    public RestAuthenticationEntryPoint getBasicAuthEntryPoint(){
+        return new RestAuthenticationEntryPoint();
+    }
+	
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler(){
 	    return new CustomAccessDeniedHandler();

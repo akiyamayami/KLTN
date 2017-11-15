@@ -27,7 +27,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/main/webapp/static/lib/javassist.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/static/lib/Arial Unicode.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

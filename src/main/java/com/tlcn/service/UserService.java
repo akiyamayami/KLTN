@@ -18,12 +18,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tlcn.dao.PasswordResetTokenRespository;
 import com.tlcn.dao.UserRespository;
+import com.tlcn.dto.ModelLogin;
 import com.tlcn.dto.ModelUser;
 import com.tlcn.model.PasswordResetToken;
 import com.tlcn.model.Right;
@@ -51,7 +53,6 @@ public class UserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		User userInfo = userRespository.findOne(username.toLowerCase());
-		System.out.println(username);
         System.out.println("UserInfo= " + userInfo);
         
         if (userInfo == null) {
@@ -59,6 +60,7 @@ public class UserService implements UserDetailsService{
         }    
         List<Role> x = new ArrayList<Role>();
         x.add(userInfo.getRoleUser());
+        System.out.println("password = " + userInfo.getPassword());
         UserDetails userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(userInfo.getEmail(),
                 userInfo.getPassword(),getAuthorities(x));
 		return userDetails;
@@ -153,6 +155,8 @@ public class UserService implements UserDetailsService{
 	public void save(User user){
 		userRespository.save(user);
 	}
+	
+	
 	public boolean uploadfile(MultipartFile file, String localtion, String namefile){
 		try {
 			byte[] bytes;
@@ -180,5 +184,22 @@ public class UserService implements UserDetailsService{
 	public boolean checkUserhasAuthority(String Authority) {
 		System.out.println(getUserLogin().getUsername());
 		return getUserLogin().getAuthorities().contains(new SimpleGrantedAuthority(Authority));
+	}
+	
+	//API 
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder(11);
+	}
+	public boolean checkLogin(ModelLogin user) {
+		User userCheck = userRespository.findOne(user.getEmail());
+		System.out.println("Login");
+		if(userCheck == null) {
+			return false;
+		}
+		else if(encoder().matches(user.getPassword(), userCheck.getPassword()))
+		{
+			return true;
+		}
+		return false;
 	}
 }

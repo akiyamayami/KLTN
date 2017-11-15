@@ -203,6 +203,10 @@ public class CarService {
 		System.out.println("change-car-9");
 		carRepository.save(caradd);
 	}
+	
+	public void checkUpdateProposalID(List<Proposal> listProposal) {
+		
+	}
 	public void updateListCarOfDriver(Car caradd, String type){
 		Driver driver = caradd.getDriver();
 		List<Car> listcar = driver.getListcar();

@@ -412,3 +412,8 @@ a i{
 	height: 600px;
 }
 
+.MessageBox{
+    display: table-cell;
+    vertical-align: middle;
+    color: #000000;
+}

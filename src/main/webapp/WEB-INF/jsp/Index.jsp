@@ -44,7 +44,13 @@
 								test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
 								<c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
 									<div class="title-content">
-										<div class="row">Tìm đề nghị</div>
+										<div class="row">Tìm đề nghị
+										<div class="col-sm-1" style="float: right; margin-top: 3px;">
+												<a href="/create-proposal" data-toggle="tooltip"
+													data-placement="top" title="Tạo đề nghị"><i
+													class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
+											</div>
+										</div>
 									</div>
 								</c:if>
 								<c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">

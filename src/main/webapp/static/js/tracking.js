@@ -14,6 +14,7 @@ var config = {
 };
 firebase.initializeApp(config);
 var database = firebase.database();
+checkAndUpdateProposalID();
 function initMap(proposalID, database) {
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom : 16,
@@ -62,6 +63,24 @@ function initMap(proposalID, database) {
 				marker.setPosition(myLatlng);
 			}
 		}
+	});
+}
+function checkAndUpdateProposalID(){
+	$('.id-car').each(function() {
+		var carID = $(this).text();
+		console.log("carID = " + carID);
+		var proposalID = $(this).parent("div").find(".id-proposal").text();
+		var datax = database.ref("car/" + carID + "/proposalID");
+		datax.once("value", function(snap) {
+			var snapData = snap.val();
+			console.log("snapData = " + snapData);
+			console.log("proposalID = " + proposalID);
+			if(proposalID != snapData)
+			{
+				var datay = database.ref("car/" + carID).update({"proposalID" : parseInt(proposalID)});
+				console.log("update success");
+			}
+		});
 	});
 }
 $(document).ready(function() {

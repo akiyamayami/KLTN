@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.tlcn</groupId>
-	<artifactId>TLCN</artifactId>
+	<groupId>com.kltn</groupId>
+	<artifactId>KLTN</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>TLCN</name>
+	<name>KLTN</name>
 	<description>Website Quan ly dieu xe</description>
 
 	<parent>
@@ -92,12 +92,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.5.0-b01</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
-		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports-fonts</artifactId>
-			<version>6.0.0</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.twilio.sdk</groupId>
@@ -106,21 +100,42 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-	      <groupId>com.google.apis</groupId>
-	      <artifactId>google-api-services-drive</artifactId>
-	      <version>v3-rev81-1.22.0</version>
-	    </dependency>
-	    <!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
-		<dependency>
-		    <groupId>com.google.api-client</groupId>
-		    <artifactId>google-api-client</artifactId>
-		    <version>1.22.0</version>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-drive</artifactId>
+			<version>v3-rev81-1.22.0</version>
 		</dependency>
-	    <!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
 		<dependency>
-		    <groupId>com.google.oauth-client</groupId>
-		    <artifactId>google-oauth-client-jetty</artifactId>
-		    <version>1.22.0</version>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.22.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.22.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>5.5.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>22.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.4</version>
 		</dependency>
 	</dependencies>
 

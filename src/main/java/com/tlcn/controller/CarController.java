@@ -1,5 +1,6 @@
 package com.tlcn.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -66,6 +67,8 @@ public class CarController {
 	@Autowired
 	private SttCarService sttCarService;
 	
+	
+	
 	@Autowired
 	private ProposalService proposalService;
 	
@@ -74,7 +77,7 @@ public class CarController {
 	
 	@Autowired
 	private UserService userService;
-	public CarController() {
+	public CarController(){
 		super();
 	}
 	public void addListTypeAndSeat(Model model){

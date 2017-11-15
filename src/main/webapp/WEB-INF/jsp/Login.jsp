@@ -59,6 +59,11 @@ function validate() {
 				${messages}
 			</h1>
 		</c:if>
+		<c:if test="${param.unauthorized != null}">
+			<h1 id="error" class="alert alert-danger">
+				You need Login to access
+			</h1>
+		</c:if>
 		<div id="main-region1">
         <div class="form"> 
 	    	<sec:authorize access="isAnonymous()">

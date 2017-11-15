@@ -52,6 +52,7 @@
 											<img src="static/img/user/${proposal.car.driver.email}.jpg"
 												height="32px" width="32px" /> <span>${proposal.car.driver.name}</span>
 											<span class="id-proposal" style="display: none">${proposal.proposalID}</span>
+											<span class="id-car" style="display: none">${proposal.car.carID}</span>
 										</div>
 									</c:forEach>
 								</div>
