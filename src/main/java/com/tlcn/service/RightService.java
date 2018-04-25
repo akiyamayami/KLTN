@@ -1,21 +1,21 @@
 package com.tlcn.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tlcn.dao.RightRepository;
+import com.tlcn.model.Right;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tlcn.dao.CarRepository;
-import com.tlcn.dao.RightRepository;
-import com.tlcn.model.Right;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RightService {
-	@Autowired
-	private RightRepository rightRepository;
-	
-	private Right findOne(int rightID){
+    @Autowired
+	private  RightRepository rightRepository;
+
+
+
+    private Right findOne(int rightID){
 		return rightRepository.findOne(rightID);
 	}
 	

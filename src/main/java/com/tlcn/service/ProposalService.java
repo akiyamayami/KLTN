@@ -1,80 +1,64 @@
 package com.tlcn.service;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.multipart.MultipartFile;
-
+import com.tlcn.Const.Const;
 import com.tlcn.dao.ProposalRepository;
 import com.tlcn.dto.ModelCreateorChangeProposal;
 import com.tlcn.dto.ModelFilterProposal;
-import com.tlcn.dto.ModelFormProposal;
-import com.tlcn.model.Car;
-import com.tlcn.model.ConfirmProposal;
-import com.tlcn.model.Proposal;
-import com.tlcn.model.RegisterProposal;
-import com.tlcn.model.SttProposal;
-import com.tlcn.model.TypeProposal;
-import com.tlcn.model.User;
-import com.tlcn.validator.ProposalValidator;
+import com.tlcn.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProposalService {
-	@Autowired
-	private ProposalRepository proposalRepository;
-	@Autowired
-	private TypeProposalService typeProposalService;
-	@Autowired
-	private SttProposalService sttProposalService;
-	@Autowired
-	private NotifyEventService notifyEventService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private CarService carService;
-	@Autowired
-	private RegisterProposalService registerProposalService;
-	@Autowired
-	private ConfirmProposalService confirmProposalService;
-	
-	
-	public void saveProposal(ModelCreateorChangeProposal model, User user, HttpServletRequest request)
-			throws MultipartException, IOException {
+
+    @Autowired
+	private  ProposalRepository proposalRepository;
+    @Autowired
+	private  TypeProposalService typeProposalService;
+    @Autowired
+	private  SttProposalService sttProposalService;
+    @Autowired
+	private  NotifyEventService notifyEventService;
+    @Autowired
+	private  UserService userService;
+    @Autowired
+	private  CarService carService;
+    @Autowired
+	private  RegisterProposalService registerProposalService;
+    @Autowired
+	private  ConfirmProposalService confirmProposalService;
+
+
+
+    public void saveProposal(ModelCreateorChangeProposal model, User user, HttpServletRequest request)
+			throws MultipartException {
 		System.out.println("Save Proposal");
 //		Car carRegistered = carService.findOne(model.getCarID());
 //		long count = carService
-//				.findListCarAvailableInTime(getDate(model.getUsefromdate(), model.getUsefromtime()),
-//						getDate(model.getUsetodate(), model.getUsetotime()))
+//				.findListCarAvailableInTime(carService.getDate(model.getUsefromdate(), model.getUsefromtime()),
+//						carService.getDate(model.getUsetodate(), model.getUsetotime()))
 //				.parallelStream().filter(x -> x.equals(carRegistered)).count();
-		Proposal proposalnew = null;
-		System.out.println("Save Proposal 1");
+		Proposal proposalnew;
 		proposalnew = new Proposal(typeProposalService.findOne(1), model.getName(), model.getDetail(),
 				model.getDestination(), model.getPickuplocation(), model.getPickuptime(), model.getUsefromdate(),
 				model.getUsefromtime(), model.getUsetodate(), model.getUsetotime(), sttProposalService.findOne(0),
 				carService.findOne(model.getCarID()));
-		System.out.println("Save Proposal 2");
-		System.out.println("Save Proposal 4");
+
 		proposalRepository.save(proposalnew);
 		MultipartFile file = model.getFile();
 		if (!file.isEmpty()) {
 			String location = request.getServletContext().getRealPath("static") + "/file/";
 			String name = file.getOriginalFilename();
 			String namefile = proposalnew.getProposalID() + name.substring(name.lastIndexOf("."), name.length());
-			uploadfile(file, location, namefile);
+            userService.uploadfile(file, location, namefile);
 			proposalnew.setFile(namefile);
 			System.out.println("Save Proposal 5");
 		}
@@ -101,7 +85,7 @@ public class ProposalService {
 				String location = request.getServletContext().getRealPath("static") + "/file/";
 				String name = file.getOriginalFilename();
 				String namefile = proposal.getProposalID() + name.substring(name.lastIndexOf("."),name.length());
-				if(uploadfile(file,location,namefile))
+				if(userService.uploadfile(file,location,namefile))
 					return false;
 				if(proposal.getFile() != null){
 					proposal.setFile(namefile);
@@ -146,18 +130,9 @@ public class ProposalService {
 	public void remove(Proposal proposal){
 		proposalRepository.delete(proposal);
 	}
-	public List<Proposal> getListProposalReady(){
-		long today = Calendar.getInstance().getTime().getTime();
-		List<Proposal> listproposaready = findAll().parallelStream()
-				.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 
-						&& (getDate(p.getUsefromdate(), p.getUsefromtime()) >= today ||
-						isInTimeUse(p)))
-				.collect(Collectors.toList());
-		return listproposaready;
-	}
 	
 	public void approveProposal(Proposal proposal) {
-		proposal.setStt(sttProposalService.findOne(1));
+		proposal.setStt(sttProposalService.findOne(Const.Proposal.CONFIRM));
 		ConfirmProposal confirmproposal = new ConfirmProposal(userService.GetUser(), proposal, Calendar.getInstance().getTime());
 		confirmProposalService.save(confirmproposal);
 		proposal.setInfoconfirm(confirmproposal);
@@ -179,29 +154,15 @@ public class ProposalService {
 		Collections.reverse(proposals);
 		return proposals;
 	}
-	public List<Proposal> findProposalofuser(User user){
-		List<Proposal> proposals = new ArrayList<>();
-		for(Proposal proposal : proposalRepository.listProposal_User(user)){
-			proposals.add(proposal);
-		}
+	private List<Proposal> findProposalofuser(User user){
+        List<Proposal> proposals = new ArrayList<>(proposalRepository.listProposal_User(user));
 		Collections.reverse(proposals);
 		return proposals;
 	}
 	public List<Proposal> listProposalFind(ModelFilterProposal filter, User user){
-		List<Proposal> proposals = new ArrayList<>();
-		for(Proposal proposal : getListFilter(filter,user)){
-			proposals.add(proposal);
-		}
+        List<Proposal> proposals = new ArrayList<>(getListFilter(filter, user));
 		Collections.reverse(proposals);
 		return proposals;
-	}
-	public void confirmProposal(int proprosalID){
-		Proposal x = proposalRepository.findOne(proprosalID);
-		x.setStt(sttProposalService.findOne(1));
-		proposalRepository.save(x);
-	}
-	public void deleteProposal(int proposalID){
-		// code here
 	}
 	
 	public ModelCreateorChangeProposal convertProposalToModelShow( Proposal proposal){
@@ -210,7 +171,7 @@ public class ProposalService {
 		Calendar y = Calendar.getInstance();
 		x.setTime(proposal.getUsefromdate());
 		y.setTime(proposal.getUsetodate());
-		boolean exitstfile = (proposal.getFile() != null) ? true : false;
+		boolean exitstfile = proposal.getFile() != null;
 		modelShow = new ModelCreateorChangeProposal(proposal.getProposalID(),
 				proposal.getName(),proposal.getDetail(),proposal.getDestination(),proposal.getPickuplocation(),
 				proposal.getPickuptime(),x.getTime(),proposal.getUsefromtime(),
@@ -222,10 +183,9 @@ public class ProposalService {
 		return proposalRepository.listProposalExpired();
 	}
 	public List<Proposal> getListProposalAreProcessing(){
-		List<Proposal> listArePropocessing = findAll().parallelStream()
-				.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 && isInTimeUse(p))
-				.collect(Collectors.toList());
-		return listArePropocessing;
+        return findAll().parallelStream()
+                .filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 && isInTimeUse(p))
+                .collect(Collectors.toList());
 	}
 	private List<Proposal> getListFilter(ModelFilterProposal filter, User user){
 		System.out.println("stt" + filter.getStt() + ", " + filter.getType() + "," + filter.getDatecreate()  );
@@ -235,15 +195,13 @@ public class ProposalService {
 		if(filter.getStt() != null){
 			sttID = Integer.parseInt(filter.getStt());
 		}
-		if(filter.getType() != null && filter.getType() != "")
+		if(StringUtils.isEmpty(filter.getType()))
 			typeNumber = Integer.parseInt(filter.getType());
 		TypeProposal type = null;
 		if(typeNumber != 0){
 			type = typeProposalService.findOne(typeNumber);
 		}
 		SttProposal stt = sttProposalService.findOne(sttID);
-		System.out.println("stt = "+ stt);
-		System.out.println("test " + datecreate == null && stt == null && type == null);
 		if(user == null){
 			if(datecreate == null && stt == null && type == null)
 				return findAll();
@@ -251,7 +209,7 @@ public class ProposalService {
 				return proposalRepository.LPF_all(datecreate, type, stt);
 			if(datecreate != null && stt == null && type != null)
 				return proposalRepository.LPF_datecreate_and_type(datecreate, type);
-			if(datecreate != null && stt != null && type == null)
+			if(datecreate != null && stt != null)
 				return proposalRepository.LPF_datecreate_and_stt(datecreate, stt);
 			if(datecreate == null && stt != null && type != null)
 				return proposalRepository.LPF_type_stt(type, stt);
@@ -272,7 +230,7 @@ public class ProposalService {
 				return proposalRepository.LPF_all_of_user(datecreate, type, stt, user);
 			if(datecreate != null && stt == null && type != null)
 				return proposalRepository.LPF_datecreate_and_type_of_user(datecreate, type, user);
-			if(datecreate != null && stt != null && type == null)
+			if(datecreate != null && stt != null)
 				return proposalRepository.LPF_datecreate_and_stt_of_user(datecreate, stt, user);
 			if(datecreate == null && stt != null && type != null)
 				return proposalRepository.LPF_type_stt_of_user(type, stt, user);
@@ -287,26 +245,25 @@ public class ProposalService {
 	}
 	public List<Proposal> getListProposalHaveCarHasBeenUsed(Proposal proposal){
 		List<Proposal> listProposal = proposalRepository.getListProposalNotCofirmOfCar(proposal.getCar());
-		long timeFrom = getDate(proposal.getUsefromdate(), proposal.getUsefromtime());
-		long timeTo = getDate(proposal.getUsetodate(), proposal.getUsetotime());
-		List<Proposal> x = listProposal.parallelStream()
-				.filter(p -> isBetween(getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo))
-				.collect(Collectors.toList());
-		return x;
+		long timeFrom = carService.getDate(proposal.getUsefromdate(), proposal.getUsefromtime());
+		long timeTo = carService.getDate(proposal.getUsetodate(), proposal.getUsetotime());
+        return listProposal.parallelStream()
+                .filter(p -> isBetween(carService.getDate(p.getUsefromdate(), p.getUsefromtime()),carService.getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo))
+                .collect(Collectors.toList());
 	}
 	
 	public Proposal isProposalHaveCarWasUsed(Car car, Proposal proposal){
 		List<Proposal> listProposal = proposalRepository.getListProposalConfirmOfCar(car);
-		long timeFrom =  getDate(proposal.getUsefromdate(), proposal.getUsefromtime());
-		long timeTo = getDate(proposal.getUsetodate(), proposal.getUsetotime());
-		Proposal x = null;
+		long timeFrom =  carService.getDate(proposal.getUsefromdate(), proposal.getUsefromtime());
+		long timeTo = carService.getDate(proposal.getUsetodate(), proposal.getUsetotime());
+		Proposal x;
 		// time check is X
 		// time Already used is Y 
 		// first check X is Between Yfrom and YTo
 		// second check Y is Between Xfrom and XTo
 		x = listProposal.parallelStream()
-				.filter(p -> isBetween(timeFrom,timeTo,getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()))
-						|| isBetween(getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo))
+				.filter(p -> isBetween(timeFrom,timeTo,carService.getDate(p.getUsefromdate(), p.getUsefromtime()),carService.getDate(p.getUsetodate(), p.getUsetotime()))
+						|| isBetween(carService.getDate(p.getUsefromdate(), p.getUsefromtime()),carService.getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo))
 				.findFirst().orElse(null);
 		if(x != null){
 			System.out.println(" Proposal register car is : " + x.getProposalID());
@@ -314,79 +271,41 @@ public class ProposalService {
 		return x;
 	}
 	public boolean check_User_Owned_Proposal_Or_Not(int proposalID, User user){
-		if(proposalRepository.checkProposalOwnedByUserOrNot(proposalID, user) == 0){
-			return false;
-		}
-		return true;
-	}
-	public boolean isBetween(long timeCheckFrom,long timeCheckTo, long timeFrom, long timeTo){
-		if((timeCheckFrom >= timeFrom && timeCheckFrom <= timeTo) || (timeCheckTo >= timeFrom && timeCheckTo <= timeTo))
-			return true;
-		return false;
-	}
-	public Long getDate(Date date, Date time){
-		Calendar Cdate = Calendar.getInstance(),Ctime = Calendar.getInstance(),dateTime = Calendar.getInstance();
-		Cdate.setTime(date);
-		Ctime.setTime(time);
-		dateTime.set(Cdate.get(Calendar.YEAR), Cdate.get(Calendar.MONTH), Cdate.get(Calendar.DATE), 
-				Ctime.get(Calendar.HOUR_OF_DAY), Ctime.get(Calendar.MINUTE));
-		return dateTime.getTime().getTime();
-	}
-	
-	public ModelFormProposal genarateFormProposal(Proposal proposal){
-		ModelFormProposal x = new ModelFormProposal(1,"1231231","12312321","!23123213","123123123","12312321");
-		return x;
-	}
+        return proposalRepository.checkProposalOwnedByUserOrNot(proposalID, user) != 0;
+    }
+	private boolean isBetween(long timeCheckFrom, long timeCheckTo, long timeFrom, long timeTo){
+        return (timeCheckFrom >= timeFrom && timeCheckFrom <= timeTo) || (timeCheckTo >= timeFrom && timeCheckTo <= timeTo);
+    }
+
 	
 	public boolean isInTimeUse(Proposal proposal){
-		Calendar now = Calendar.getInstance();
-		long timeStart = getDate(proposal.getUsefromdate(),proposal.getUsefromtime());
-		long today = now.getTime().getTime();
-		long timeEnd = getDate(proposal.getUsetodate(),proposal.getUsetotime());
-		if( proposal.getStt().getSttproposalID() == 1 && proposal.getType().getTypeID() != 3
-				&& today > timeStart && timeEnd > today)
-			return true;
-		return false;
-	}
-	
-	public boolean uploadfile(MultipartFile file, String localtion, String namefile)
-			throws IOException, MultipartException {
-		byte[] bytes;
-		bytes = file.getBytes();
-		File serverFile = new File(localtion + namefile);
-		BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-		stream.write(bytes);
-		stream.close();
-		return true;
-	}
+		long timeStart = carService.getDate(proposal.getUsefromdate(),proposal.getUsefromtime());
+		long today = System.currentTimeMillis();
+		long timeEnd = carService.getDate(proposal.getUsetodate(),proposal.getUsetotime());
+        return proposal.getStt().getSttproposalID() == 1 && proposal.getType().getTypeID() != 3
+                && today > timeStart && timeEnd > today;
+    }
+
 	public boolean isConfirmProposal(Proposal proposal){
-		if(proposal.getStt().getSttproposalID() == 1)
-			return true;
-		return false;
-	}
+        return proposal.getStt().getSttproposalID() == 1;
+    }
 	public boolean isProposalCancel(Proposal proposal){
-		if(proposal.getStt().getSttproposalID() == 1 && proposal.getType().getTypeID() == 3)
-			return true;
-		return false;
-	}
+        return proposal.getStt().getSttproposalID() == 1 && proposal.getType().getTypeID() == 3;
+    }
 	public boolean isProposalExpired(Proposal proposal){
 		Calendar now = Calendar.getInstance();
 		System.out.println(proposal.getUsetodate() +  "+ now = " + now.getTime());
 		
-		long timeFrom = getDate(proposal.getUsefromdate(),proposal.getUsefromtime());
-		long timeTo = getDate(proposal.getUsetodate(),proposal.getUsetotime());
+		long timeFrom = carService.getDate(proposal.getUsefromdate(),proposal.getUsefromtime());
+		long timeTo = carService.getDate(proposal.getUsetodate(),proposal.getUsetotime());
 		long timeNow = now.getTime().getTime();
 		System.out.println(timeTo < timeNow);
 		System.out.println(timeFrom < timeNow);
 		if(proposal.getStt().getSttproposalID() == 1){
-			if(timeTo < timeNow)
-				return true;
-			return false;
-		}
+            return timeTo < timeNow;
+        }
 		else{
-			if(timeFrom < timeNow)
-				return true;
-			return false;
-		}
+            return timeFrom < timeNow;
+        }
 	}
 }

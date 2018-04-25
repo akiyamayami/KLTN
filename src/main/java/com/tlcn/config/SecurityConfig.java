@@ -1,13 +1,16 @@
 package com.tlcn.config;
 
+import com.tlcn.security.CustomAccessDeniedHandler;
+import com.tlcn.security.MyLogoutSuccessHandler;
+import com.tlcn.security.MySavedRequestAwareAuthenticationSuccessHandler;
+import com.tlcn.security.RestAuthenticationEntryPoint;
+import com.tlcn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -17,29 +20,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
-import com.tlcn.security.CustomAccessDeniedHandler;
-import com.tlcn.security.MyLogoutSuccessHandler;
-import com.tlcn.security.MySavedRequestAwareAuthenticationSuccessHandler;
-import com.tlcn.security.RestAuthenticationEntryPoint;
-import com.tlcn.service.UserService;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	@Autowired
-    private UserService userDetailsService;
-	
-	@Autowired
-    private MySavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
-	
-	@Autowired
-	private MyLogoutSuccessHandler myLogoutSuccessHandler;
-	
-	@Autowired
+
+    @Autowired
+	private  UserService userDetailsService;
+    @Autowired
+	private  MySavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
+    @Autowired
+	private  MyLogoutSuccessHandler myLogoutSuccessHandler;
+    @Autowired
 	private CustomAccessDeniedHandler customAccessDeniedHandler;
-	
-	@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authProvider());
     }
 	
@@ -103,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     public PasswordEncoder encoder() {
 	        return new BCryptPasswordEncoder(11);
     }
-	
+
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
 	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

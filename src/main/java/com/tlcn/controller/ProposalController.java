@@ -1,35 +1,5 @@
 package com.tlcn.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.tlcn.dto.ModelCalendar;
 import com.tlcn.dto.ModelCreateorChangeProposal;
 import com.tlcn.dto.ModelFilterProposal;
 import com.tlcn.dto.ModelShowNotify;
@@ -37,51 +7,51 @@ import com.tlcn.error.NotOwnerOfProposalException;
 import com.tlcn.error.ProposalHasBeenRemoveException;
 import com.tlcn.error.ProposalNotFoundException;
 import com.tlcn.model.Car;
-import com.tlcn.model.ConfirmProposal;
 import com.tlcn.model.Driver;
 import com.tlcn.model.Proposal;
-import com.tlcn.model.RegisterProposal;
 import com.tlcn.model.User;
-import com.tlcn.runnable.SendEmail;
-import com.tlcn.service.CalendarService;
-import com.tlcn.service.CarService;
-import com.tlcn.service.ConfirmProposalService;
-import com.tlcn.service.NotifyEventService;
-import com.tlcn.service.ProposalService;
-import com.tlcn.service.RegisterProposalService;
-import com.tlcn.service.SttProposalService;
-import com.tlcn.service.TypeProposalService;
-import com.tlcn.service.UserService;
+import com.tlcn.service.*;
 import com.tlcn.validator.ProposalValidator;
+import org.apache.commons.lang.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
 public class ProposalController {
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private ProposalService proposalService;
-	@Autowired
-	private TypeProposalService typeProposalService;
-	@Autowired
-	private CarService carService;
-	@Autowired
-	private RegisterProposalService registerProposalService;
-	@Autowired
-	private NotifyEventService notifyEventService;
-	@Autowired
-	private SttProposalService sttProposalService;
-	@Autowired
-	private ConfirmProposalService confirmProposalService;
-	@Autowired
-	private CalendarService calendarService;
-	@Autowired
-	private ProposalValidator proposaValidator;
+	private final UserService userService;
+	private final ProposalService proposalService;
+	private final TypeProposalService typeProposalService;
+	private final CarService carService;
+    private final NotifyEventService notifyEventService;
+	private final SttProposalService sttProposalService;
+    private final CalendarService calendarService;
+	private final ProposalValidator proposaValidator;
 	
-	public ProposalController() {
+	@Autowired
+    public ProposalController(UserService userService, ProposalService proposalService, TypeProposalService typeProposalService, CarService carService, NotifyEventService notifyEventService, SttProposalService sttProposalService, CalendarService calendarService, ProposalValidator proposaValidator) {
 		super();
-	}
-	public List<Proposal> getListProposalOfPage(int pageNumber, List<Proposal> listProposal, int numberOfPages){
+        this.userService = userService;
+        this.proposalService = proposalService;
+        this.typeProposalService = typeProposalService;
+        this.carService = carService;
+        this.notifyEventService = notifyEventService;
+        this.sttProposalService = sttProposalService;
+        this.calendarService = calendarService;
+        this.proposaValidator = proposaValidator;
+    }
+	private List<Proposal> getListProposalOfPage(int pageNumber, List<Proposal> listProposal, int numberOfPages){
 		System.out.println("3");
 		List<Proposal> list = listProposal;
 		if(pageNumber == 1)
@@ -114,11 +84,11 @@ public class ProposalController {
 		
 		return list;
 	}
-	public void showListProposal(Model model,String month,String year, String pageNumber,ModelFilterProposal filterproposal){
-		List<Proposal> listProposal = null;
-		List<Proposal> listShow = null;
+	private void showListProposal(Model model, String month, String year, String pageNumber, ModelFilterProposal filterproposal){
+		List<Proposal> listProposal;
+		List<Proposal> listShow;
 		int pageNum = 1;
-		if(pageNumber != null || pageNumber != ""){
+		if(!StringUtils.isEmpty(pageNumber)){
 			if(NumberUtils.isNumber(pageNumber))
 				pageNum = Integer.parseInt(pageNumber);
 		}
@@ -207,7 +177,7 @@ public class ProposalController {
 	@RequestMapping(value = "/create-proposal", method = RequestMethod.POST)
 	public String createProposalPOST(Model model,
 			@Valid @ModelAttribute("Proposal") ModelCreateorChangeProposal proposal,BindingResult result, 
-			HttpServletRequest request) throws MultipartException, IOException {
+			HttpServletRequest request) throws MultipartException {
 		proposaValidator.validate(proposal, result);
 		if(checkExceptionCarAndDriver(carService.findOne(proposal.getCarID()),model,"change") || result.hasErrors()){
 			model.addAttribute("MODE", "MODE_CREATE_PROPOSAL");
@@ -305,8 +275,8 @@ public class ProposalController {
 		return "Index";
 	}
 	@RequestMapping(value = "/confirm-proposal", method = RequestMethod.POST)
-	public String confirmProposalPOST(Model model,@ModelAttribute("Proposal") ModelCreateorChangeProposal proposal,
-			BindingResult result, HttpServletRequest request, HttpSession session) {
+	public String confirmProposalPOST(Model model, @ModelAttribute("Proposal") ModelCreateorChangeProposal proposal,
+                                      HttpSession session) {
 		model.addAttribute("MODE", "MODE_CONFIRM_PROPOSAL");
 		model.addAttribute("typeForm", "/confirm-proposal");
 		int proposalID = (int) session.getAttribute("proposalID");
@@ -329,7 +299,7 @@ public class ProposalController {
 		return "redirect:/hackerDetected";
 	}
 	@RequestMapping(value = "/cancel-proposal", method = RequestMethod.GET)
-	public String cancelProposal(Model model, HttpSession session) {
+	public String cancelProposal(HttpSession session) {
 		int proposalID = (int) session.getAttribute("proposalID");
 		Proposal proposal = proposalService.findOne(proposalID);
 		if(proposal == null)
@@ -348,19 +318,19 @@ public class ProposalController {
 		return "redirect:/";
 	}
 	@RequestMapping(value = "/cancel-proposal-{proposalID}", method = RequestMethod.GET)
-	public String cancelProposalID(Model model, HttpSession session, @PathVariable("proposalID") int proposalID) {
+	public String cancelProposalID(HttpSession session, @PathVariable("proposalID") int proposalID) {
 		session.setAttribute("proposalID", proposalID);
 		return "redirect:/cancel-proposal";
 	}
 	
-	public boolean isProposalOfUser(int proposalID,User user){
+	private boolean isProposalOfUser(int proposalID, User user){
 		return proposalService.check_User_Owned_Proposal_Or_Not(proposalID,user);
 	}
 	
 	
 	
 	
-	public void showCalendarAndNotify(Model model, String month, String year){
+	private void showCalendarAndNotify(Model model, String month, String year){
 		List<ModelShowNotify> listNotify = notifyEventService.getListNotifyNewest(userService.GetUser());
 		if(listNotify != null && listNotify.size() < 5)
 			model.addAttribute("listNotify",listNotify);
@@ -370,7 +340,7 @@ public class ProposalController {
 	}
 	
 	
-	public void showCarWhenChangeProposal(ModelCreateorChangeProposal modelShow, Model model, Proposal proposal){
+	private void showCarWhenChangeProposal(ModelCreateorChangeProposal modelShow, Model model, Proposal proposal){
 		System.out.println("Show car");
 		//List<Car> carShow = carService.findListCarAvailableInTime(proposalService.getDate(proposal.getUsefromdate(), proposal.getUsefromtime()),proposalService.getDate(proposal.getUsetodate(), proposal.getUsetotime()));
 		List<Car> carShow = carService.getListCarAvailable();
@@ -396,14 +366,14 @@ public class ProposalController {
 		
 	}
 	
-	public void show1Car(Car car, Model model){
-		List<Car> listcars = new ArrayList<Car>();
+	private void show1Car(Car car, Model model){
+		List<Car> listcars = new ArrayList<>();
 		listcars.add(car);
 		model.addAttribute("carsAvailble", listcars);
 	}
 	
 	
-	public boolean isCarAlreadyUsed(Proposal proposal, Model model){
+	private boolean isCarAlreadyUsed(Proposal proposal, Model model){
 		Proposal x = proposalService.isProposalHaveCarWasUsed(proposal.getCar(), proposal);
 		if(proposal.getStt().getSttproposalID() == 1)
 			return false;
@@ -415,7 +385,7 @@ public class ProposalController {
 		return false;
 	}
 
-	public boolean checkExceptionProposal(Proposal proposal, Model model){
+	private boolean checkExceptionProposal(Proposal proposal, Model model){
 		if(proposalService.isProposalExpired(proposal)){
 			System.out.println("Đề nghị :" + proposal.getProposalID() + "Hết hạn");
 			model.addAttribute("message", "Đề nghị này đã hết hạn");
@@ -434,7 +404,7 @@ public class ProposalController {
 	}
 	
 	
-	public boolean checkExceptionCarAndDriver(Car car, Model model, String type){
+	private boolean checkExceptionCarAndDriver(Car car, Model model, String type){
 		if(type.equals("confirm")){
 			switch(car.getSttcar().getSttcarID()){
 				case 2:

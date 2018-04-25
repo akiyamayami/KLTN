@@ -8,13 +8,10 @@ import com.tlcn.model.SttProposal;
 
 @Service
 public class SttProposalService {
-
-	@Autowired
+    @Autowired
 	private SttProposalRespository sttProposalRespository;
 
-	public SttProposalService() {
-		super();
-	}
+
 	
 	public SttProposal findOne(int sttproposalID){
 		return sttProposalRespository.findOne(sttproposalID);

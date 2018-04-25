@@ -11,12 +11,9 @@ import com.tlcn.model.SttCar;
 
 @Service
 public class SttCarService {
-	@Autowired
-	private SttCarRepository sttCarRepository;
+    @Autowired
+	private  SttCarRepository sttCarRepository;
 
-	public SttCarService() {
-		super();
-	}
 	
 	public List<SttCar> findAll(){
 		List<SttCar> stts = new ArrayList<>();

@@ -1,86 +1,64 @@
 package com.tlcn.controller;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import com.tlcn.Const.Const;
+import com.tlcn.dto.ModelCreateorChangeCar;
+import com.tlcn.dto.ModelFilterCar;
+import com.tlcn.dto.ModelShowNotify;
+import com.tlcn.error.CarNotFoundException;
+import com.tlcn.model.Car;
+import com.tlcn.model.Proposal;
+import com.tlcn.model.SttCar;
+import com.tlcn.model.User;
+import com.tlcn.service.*;
+import com.tlcn.validator.CarValidator;
+import com.tlcn.validator.ModelCarValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.tlcn.dto.ModelCalendar;
-import com.tlcn.dto.ModelCarReady;
-import com.tlcn.dto.ModelCreateorChangeCar;
-import com.tlcn.dto.ModelCreateorChangeDriver;
-import com.tlcn.dto.ModelFilterCar;
-import com.tlcn.dto.ModelShowNotify;
-import com.tlcn.error.CarNotFoundException;
-import com.tlcn.model.Car;
-import com.tlcn.service.CarService;
-import com.tlcn.service.DriverService;
-import com.tlcn.service.NotifyEventService;
-import com.tlcn.service.ProposalService;
-import com.tlcn.service.SttCarService;
-import com.tlcn.service.UserService;
-import com.tlcn.validator.CarValidator;
-import com.tlcn.validator.DriverValidator;
-import com.tlcn.validator.ModelCarValidator;
-import com.tlcn.model.Driver;
-import com.tlcn.model.Proposal;
-import com.tlcn.model.SttCar;
-import com.tlcn.model.User;
+import javax.servlet.http.HttpSession;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Component
 public class CarController {
-	@Autowired
-	private CarService carService;
+	private final CarService carService;
 
+	private final CarValidator carValidator;
+	
+	private final DriverService driverService;
+	
+	private final ModelCarValidator modelCarValidator;
+	
+	private final SttCarService sttCarService;
+    private final CalendarService calendarService;
+	
+	
+	private final ProposalService proposalService;
+	
+	private final NotifyEventService notifyEventService;
+	
+	private final UserService userService;
 	@Autowired
-	private CarValidator carValidator;
-	
-	@Autowired
-	private DriverService driverService;
-	
-	@Autowired
-	private ModelCarValidator modelCarValidator;
-	
-	@Autowired
-	private SttCarService sttCarService;
-	
-	
-	
-	@Autowired
-	private ProposalService proposalService;
-	
-	@Autowired 
-	private NotifyEventService notifyEventService;
-	
-	@Autowired
-	private UserService userService;
-	public CarController(){
+    public CarController(CarService carService, CarValidator carValidator, DriverService driverService, ModelCarValidator modelCarValidator, SttCarService sttCarService, CalendarService calendarService, ProposalService proposalService, NotifyEventService notifyEventService, UserService userService){
 		super();
-	}
-	public void addListTypeAndSeat(Model model){
+        this.carService = carService;
+        this.carValidator = carValidator;
+        this.driverService = driverService;
+        this.modelCarValidator = modelCarValidator;
+        this.sttCarService = sttCarService;
+        this.calendarService = calendarService;
+        this.proposalService = proposalService;
+        this.notifyEventService = notifyEventService;
+        this.userService = userService;
+    }
+	private void addListTypeAndSeat(Model model){
 		Set<String>  listtype = new HashSet<>();
 		Set<Integer>  listseats = new HashSet<>();
 		for(Car c : carService.findAll()){
@@ -100,19 +78,19 @@ public class CarController {
 	}
 	// page find-car
 	@RequestMapping(value="/find-cars", method = RequestMethod.GET)
-	public String findCar(Model model) throws Exception{
+	public String findCar(Model model) {
 		showCalendarAndNotify(model, null, null);
 		model.addAttribute("MODE", "MODE_FIND_CARS");
 		addListTypeAndSeat(model);
-		model.addAttribute("listcars", carService.findAll());
+		model.addAttribute("listcars", carService.findAll().stream().filter(c ->
+                c.getSttcar().getSttcarID() != Const.Car.REMOVE).collect(Collectors.toList()));
 		model.addAttribute("filter-car", new ModelFilterCar());
 		return "carManager";
 	}
 	
 	// filter car
 	@RequestMapping(value="/find-cars", method = RequestMethod.POST)
-	public String filterCar(Model model, @ModelAttribute("filter-car") ModelFilterCar filtercar,
-			BindingResult result) throws Exception{
+	public String filterCar(Model model, @ModelAttribute("filter-car") ModelFilterCar filtercar) {
 		showCalendarAndNotify(model, null, null);
 		model.addAttribute("MODE", "MODE_FIND_CARS");
 		addListTypeAndSeat(model);
@@ -123,7 +101,7 @@ public class CarController {
 	}
 	// page check-stt-car
 	@RequestMapping(value="/check-stt-cars", method = RequestMethod.GET)
-	public String checkSttCar(Model model) throws Exception{
+	public String checkSttCar(Model model) {
 		showCalendarAndNotify(model, null, null);
 		model.addAttribute("MODE", "MODE_CHECK_STT_CARS");
 		model.addAttribute("listCarReady", carService.getListCarReady()); 
@@ -134,7 +112,7 @@ public class CarController {
 	
 	// page create car
 	@RequestMapping(value="/create-car", method = RequestMethod.GET)
-	public String createCar(Model model) throws Exception{
+	public String createCar(Model model) {
 		showCalendarAndNotify(model, null, null);
 		model.addAttribute("MODE", "MODE_CREATE_CAR");
 		model.addAttribute("typeForm", "/create-car");
@@ -148,7 +126,7 @@ public class CarController {
 	
 	
 	@RequestMapping(value="/create-car", method = RequestMethod.POST)
-	public String createCar(Model model, @ModelAttribute("Car") ModelCreateorChangeCar car, BindingResult result) throws Exception{
+	public String createCar(Model model, @ModelAttribute("Car") ModelCreateorChangeCar car, BindingResult result) {
 		modelCarValidator.validate(car, result);
 		if(result.hasErrors()){
 			showCalendarAndNotify(model, null, null);
@@ -165,7 +143,7 @@ public class CarController {
 	}
 	
 	@RequestMapping(value="/change-car-{carID}", method = RequestMethod.GET)
-	public String changeCar(Model model, @PathVariable int carID, HttpSession session) throws Exception{
+	public String changeCar(Model model, @PathVariable int carID, HttpSession session) {
 		Car car = carService.findOne(carID);
 		if(car == null){
 			throw new CarNotFoundException();
@@ -181,7 +159,7 @@ public class CarController {
 	}
 	
 	@RequestMapping(value="/remove-car-{carID}", method = RequestMethod.GET)
-	public String removeCar(Model model,@PathVariable int carID) throws Exception{		
+	public String removeCar(Model model,@PathVariable int carID) {
 		Car car = carService.findOne(carID);
 		if(car == null){
 			throw new CarNotFoundException();
@@ -192,8 +170,7 @@ public class CarController {
 			carService.remove(car);
 		}else {
 			boolean isCarinTimeUse = car.getListproposal().parallelStream()
-					.filter(p -> proposalService.isInTimeUse(p))
-					.findFirst().isPresent();
+					.anyMatch(proposalService::isInTimeUse);
 			if(!isCarinTimeUse){
 				car.setSttcar(sttCarService.findOne(3));
 				car.setDriver(null);
@@ -241,12 +218,12 @@ public class CarController {
 	
 	@RequestMapping(value="/create-car-x", method = RequestMethod.POST)
 	@ResponseBody
-    public String createCarxPOST(@ModelAttribute("Car") Car car, BindingResult result)  throws Exception{
+    public String createCarxPOST(@ModelAttribute("Car") Car car, BindingResult result) {
 		carValidator.validate(car, result);
 		if(result.hasErrors()){
 			return "errors";
 		}
-		Car c = new Car(car.getLicenseplate(),car.getType(),car.getSeats(),sttCarService.findOne(1));
+		Car c = new Car(car.getLicenseplate(),car.getType(),car.getSeats(),sttCarService.findOne(Const.Car.NORMAL));
 		carService.save(c);
 		Random r = new Random();
 		int count = r.nextInt(20 - 10 + 1) + 10;
@@ -262,7 +239,7 @@ public class CarController {
 				+ "<td><a href='#' class='remove-car'><i class='fa fa-trash fa-lg' aria-hidden='true'></i></a></td></tr>";
         return html;
     }
-	public List<Car> getListCarFilter(ModelFilterCar filter){
+	private List<Car> getListCarFilter(ModelFilterCar filter){
 		int seats = filter.getSeat();
 		String type = filter.getType();
 		if(seats == -1 && type.equals("all"))
@@ -274,37 +251,20 @@ public class CarController {
 		else
 			return carService.findListFilter_Type(type);
 	}
-	public String createCalendar(String month, String year){
-		System.out.println(month+"xx" + year);
-		Calendar now = Calendar.getInstance();
-		int y,m;
-		if(month == null || year == null)
-		{
-			m = now.get(Calendar.MONTH);
-			y = now.get(Calendar.YEAR);
-			now.set(y, m, 1);
-		}else{
-			now.clear();
-			y = Integer.parseInt(year);
-			m = Integer.parseInt(month);
-			now.set(y, m, 1);
-		}
-		String html = new ModelCalendar().createCalendar(y, m, now);
-		return html;
-	}
-	public void showCalendarAndNotify(Model model, String month, String year){
+
+	private void showCalendarAndNotify(Model model, String month, String year){
 		List<ModelShowNotify> listNotify = notifyEventService.getListNotifyNewest(GetUser());
 		if(listNotify != null && listNotify.size() < 5)
 			model.addAttribute("listNotify",listNotify);
 		else
 			model.addAttribute("listNotify", notifyEventService.getListNotifyNewest(GetUser()).subList(0, 5));
-		model.addAttribute("calendar", createCalendar(month,year));
+		model.addAttribute("calendar", calendarService.createCalendar(month,year));
 	}
-	public UserDetails getUserLogin() {
+	private UserDetails getUserLogin() {
 		return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	
-	public User GetUser(){
+	private User GetUser(){
 		return userService.findOne(getUserLogin().getUsername());
 	}
 }

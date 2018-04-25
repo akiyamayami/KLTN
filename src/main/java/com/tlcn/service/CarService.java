@@ -1,41 +1,30 @@
 package com.tlcn.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.tlcn.Const.Const;
 import com.tlcn.dao.CarRepository;
-import com.tlcn.dao.ProposalRepository;
 import com.tlcn.dto.ModelCarReady;
 import com.tlcn.dto.ModelCarRegistered;
 import com.tlcn.dto.ModelCreateorChangeCar;
-import com.tlcn.error.CarNotFoundException;
 import com.tlcn.error.HaveProposalInTimeUseException;
 import com.tlcn.model.Car;
 import com.tlcn.model.Driver;
 import com.tlcn.model.Proposal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CarService {
 	@Autowired
 	private CarRepository carRepository;
-
 	@Autowired
 	private ProposalService proposalService;
 	@Autowired
 	private NotifyEventService notifyEventService;
 	@Autowired
 	private DriverService driverService;
-	@Autowired
-	private TypeProposalService typeProposalService;
 	@Autowired 
 	private SttCarService sttCarService;
 	
@@ -60,20 +49,21 @@ public class CarService {
 		}
 		return cars;
 	}
+
 	public List<Car> getListCarAvailable(){
 		return carRepository.getListCarAvaliable();
 	}
+
 	public List<Car> findListCarAvailableInTime(long timeFrom, long timeTo){
 		List<Car> listCarAvailable = carRepository.getListCarAvaliable();
 		System.out.println("start find car availble in time");
 		Set<Car> y = new HashSet<>(listCarAvailable.parallelStream()
 				.filter(c -> c.getListproposal() == null || (c.getListproposal() != null
 					&& !c.getListproposal().parallelStream()
-						.filter(p -> p.getStt().getSttproposalID() == 1
-							&& p.getType().getTypeID() != 3
+						.anyMatch(p -> p.getStt().getSttproposalID() == Const.Proposal.CONFIRM
+							&& p.getType().getTypeID() != Const.Proposal.CANCEL
 							&& (isBetween(timeFrom,timeTo,getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()))
-							|| isBetween(getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo)))
-						.findFirst().isPresent()))
+							|| isBetween(getDate(p.getUsefromdate(), p.getUsefromtime()),getDate(p.getUsetodate(), p.getUsetotime()),timeFrom,timeTo)))))
 				.collect(Collectors.toList()));
 		System.out.println("list car avalible in time");
 		for(Car c : y ){
@@ -97,30 +87,27 @@ public class CarService {
 	}
 
 	public List<ModelCarReady> getListCarReady() {
-		
-		long timeNow = Calendar.getInstance().getTime().getTime();
+
 		List<ModelCarReady> listcarready = new ArrayList<>();
 		List<Car> listcaravailable = findAll();
 		listcaravailable.parallelStream()
 				.filter(c -> c.getListproposal() != null && c.getListproposal().parallelStream()
-						.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3
-								&& (getDate(p.getUsefromdate(), p.getUsefromtime()) >= timeNow 
-										|| proposalService.isInTimeUse(p)))
-						.findFirst().isPresent())
+						.anyMatch(p -> p.getStt().getSttproposalID() == Const.Proposal.CONFIRM && p.getType().getTypeID() != Const.Proposal.CANCEL
+								&& (isTimeGreaterThanNow(p) || proposalService.isInTimeUse(p))))
 				.forEach(c -> listcarready.add(new ModelCarReady(c.getLicenseplate(),
-						c.getListproposal().parallelStream()
-								.filter(p -> p.getStt().getSttproposalID() == 1 && p.getType().getTypeID() != 3 
-								&& (getDate(p.getUsefromdate(), p.getUsefromtime()) >= timeNow || proposalService.isInTimeUse(p)))
+						c.getListproposal()
+                                .parallelStream()
+								.filter(p -> p.getStt().getSttproposalID() == Const.Proposal.CONFIRM && p.getType().getTypeID() != Const.Proposal.CANCEL)
+                                .filter(p -> (isTimeGreaterThanNow(p) || proposalService.isInTimeUse(p)))
 								.collect(Collectors.toList()))));
 		return listcarready;
 	}
 	public void converAndSave(ModelCreateorChangeCar car){
 		Car x = new Car(car.getLicenseplate(),car.getType(),car.getSeats(),
-				sttCarService.findOne(1),driverService.findOne(car.getEmailDriver()));
+				sttCarService.findOne(Const.Car.NORMAL),driverService.findOne(car.getEmailDriver()));
 		carRepository.save(x);
 	}
 	public ModelCreateorChangeCar convertCarToShow(Car car){
-		System.out.println(car);
 		ModelCreateorChangeCar carShow;
 		if(car.getDriver() != null)
 			carShow = new ModelCreateorChangeCar(car.getCarID(),car.getLicenseplate(),car.getType(),car.getSeats(),car.getSttcar().getSttcarID(),car.getDriver().getEmail());
@@ -134,8 +121,7 @@ public class CarService {
 		if(car.getSttcarID() != 1){
 			System.out.println("change-car-7");
 			boolean isCarinTimeUse = caradd.getListproposal().parallelStream()
-					.filter(p -> p.getStt().getSttproposalID() == 1 && proposalService.isInTimeUse(p))
-					.findFirst().isPresent();
+					.anyMatch(p -> p.getStt().getSttproposalID() == 1 && proposalService.isInTimeUse(p));
 			if(isCarinTimeUse){
 				throw new HaveProposalInTimeUseException();
 			}
@@ -146,7 +132,7 @@ public class CarService {
 		caradd.setType(car.getType());
 		Driver driver = driverService.findOne(car.getEmailDriver());
 		if(caradd.getSttcar().getSttcarID() != car.getSttcarID() && caradd.getListproposal() != null){
-			if(caradd.getListproposal().parallelStream().filter(p -> proposalService.isInTimeUse(p)).findFirst().isPresent())
+			if(caradd.getListproposal().parallelStream().anyMatch(p -> proposalService.isInTimeUse(p)))
 				throw new HaveProposalInTimeUseException();
 			if(caradd.getDriver() != null && driver.getEmail().equals(caradd.getDriver().getEmail())){
 				switch(car.getSttcarID()){
@@ -203,50 +189,31 @@ public class CarService {
 		System.out.println("change-car-9");
 		carRepository.save(caradd);
 	}
-	
-	public void checkUpdateProposalID(List<Proposal> listProposal) {
-		
-	}
-	public void updateListCarOfDriver(Car caradd, String type){
-		Driver driver = caradd.getDriver();
-		List<Car> listcar = driver.getListcar();
-		switch (type) {
-		case "add":
-			listcar.add(caradd);
-			break;
-		default:
-			// remove
-			listcar.remove(caradd);
-			break;
-		}
-		
-		driver.setListcar(listcar);
-		driverService.save(driver);
-	}
+
 	public List<ModelCarRegistered> getListCarRegistered(){
-		long timeNow = Calendar.getInstance().getTime().getTime();
 		List<Car> allCar = carRepository.getListCarAvaliable();
 		List<ModelCarRegistered> listcarRegister = new ArrayList<>();
 		allCar.parallelStream()
-			  .filter(c -> c.getListproposal() != null
-			  				&& c.getListproposal().parallelStream()
-												.filter(p -> p.getStt().getSttproposalID() == 0 
-													&& p.getType().getTypeID() != 3
-													&& getDate(p.getUsefromdate(),p.getUsefromtime()) > timeNow)
-												.findFirst().isPresent())
+			    .filter(c -> c.getListproposal() != null)
+                .filter(c -> c.getListproposal().parallelStream()
+                        .anyMatch(p -> p.getStt().getSttproposalID() == Const.Proposal.NOT_CONFIRM
+                                && p.getType().getTypeID() != Const.Proposal.CANCEL
+                                && isTimeGreaterThanNow(p)))
 			  .forEach(c -> listcarRegister.add(new ModelCarRegistered(c.getLicenseplate(), c.getListproposal()
-					  .parallelStream().filter(p -> getDate(p.getUsefromdate(), p.getUsefromtime()) >= timeNow)
+					  .parallelStream().filter(p -> isTimeGreaterThanNow(p))
 					  .collect(Collectors.toList()))));
 		return listcarRegister;
 	}
 
 	public List<Car> getListCarNotRegistered(){
-		long timeNow = Calendar.getInstance().getTime().getTime();
 		List<Car> listCarNotRegistered = findAll();
-		listCarNotRegistered = listCarNotRegistered.parallelStream().filter(c -> c.getListproposal() == null 
-				|| !c.getListproposal().parallelStream().filter(p -> p.getType().getTypeID() != 3 
-					&& (getDate(p.getUsefromdate(), p.getUsefromtime()) >= timeNow 
-							|| proposalService.isInTimeUse(p))).findFirst().isPresent())
+		listCarNotRegistered = listCarNotRegistered.parallelStream()
+                .filter(c -> c.getSttcar().getSttcarID() != Const.Car.REMOVE  &&
+                    c.getSttcar().getSttcarID() != Const.Car.NO_DRIVER  &&
+                    c.getListproposal() != null)
+                .filter(c -> c.getListproposal() .parallelStream()
+                        .noneMatch(p -> p.getType().getTypeID() != Const.Proposal.CANCEL &&
+                                (isTimeGreaterThanNow(p) || proposalService.isInTimeUse(p))))
 				.collect(Collectors.toList());
 		return listCarNotRegistered;
 	}
@@ -255,12 +222,16 @@ public class CarService {
 		Calendar Cdate = Calendar.getInstance(),Ctime = Calendar.getInstance(),dateTime = Calendar.getInstance();
 		Cdate.setTime(date);
 		Ctime.setTime(time);
-		dateTime.set(Cdate.get(Calendar.YEAR), Cdate.get(Calendar.MONTH), Cdate.get(Calendar.DATE), 
+		dateTime.set(Cdate.get(Calendar.YEAR), Cdate.get(Calendar.MONTH), Cdate.get(Calendar.DATE),
 				Ctime.get(Calendar.HOUR_OF_DAY), Ctime.get(Calendar.MINUTE));
 		return dateTime.getTime().getTime();
-		
 	}
-	
+
+
+	public boolean isTimeGreaterThanNow(Proposal proposal){
+        long timeNow = System.currentTimeMillis();
+        return getDate(proposal.getUsefromdate(), proposal.getUsefromtime()) >= timeNow;
+    }
 	public boolean isBetween(long timeCheckFrom,long timeCheckTo, long timeFrom, long timeTo){
 		System.out.println("time check from" + timeCheckFrom);
 		System.out.println("time check to " + timeCheckTo);

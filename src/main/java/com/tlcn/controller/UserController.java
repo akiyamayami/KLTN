@@ -1,31 +1,5 @@
 package com.tlcn.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.tlcn.dto.ModelCalendar;
 import com.tlcn.dto.ModelPassword;
 import com.tlcn.dto.ModelShowNotify;
 import com.tlcn.dto.ModelUser;
@@ -33,50 +7,72 @@ import com.tlcn.error.UserNotFoundException;
 import com.tlcn.model.Role;
 import com.tlcn.model.User;
 import com.tlcn.runnable.SendEmail;
-import com.tlcn.service.NotifyEventService;
-import com.tlcn.service.NotifyService;
-import com.tlcn.service.RoleService;
-import com.tlcn.service.UserSecurityService;
-import com.tlcn.service.UserService;
+import com.tlcn.service.*;
 import com.tlcn.validator.EditProfileValidator;
 import com.tlcn.validator.ModelPasswordValidator;
 import com.tlcn.validator.ModelUserValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Controller
 @Transactional
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
+    @Qualifier("messageSource")
 	private MessageSource messages;
+
+	private final CalendarService calendarService;
 	 
 	
-	@Autowired
-    private UserSecurityService userSecurityService;
+	private final UserSecurityService userSecurityService;
     
+	private final NotifyEventService notifyEventService;
+	
+	
+	private final RoleService roleService;
+	
+	private final ModelPasswordValidator modelPasswordValidator;
+	
+	private final ModelUserValidator modelUserValidator;
+	
+	private final NotifyService notifyService;
+
+	private final EditProfileValidator editProfileValidator;
+
 	@Autowired
-	private NotifyEventService notifyEventService;
-	
-	
-	@Autowired
-	private RoleService roleService;
-	
-	@Autowired
-	private ModelPasswordValidator modelPasswordValidator;
-	
-	@Autowired
-	private ModelUserValidator modelUserValidator;
-	
-	@Autowired
-	private NotifyService notifyService;
-	
-	@Autowired 
-	private EditProfileValidator editProfileValidator;
-	public UserController() {
+    public UserController(UserService userService, CalendarService calendarService, UserSecurityService userSecurityService, NotifyEventService notifyEventService, RoleService roleService, ModelPasswordValidator modelPasswordValidator, ModelUserValidator modelUserValidator, NotifyService notifyService, EditProfileValidator editProfileValidator) {
 		super();
-	}
+        this.userService = userService;
+        this.calendarService = calendarService;
+        this.userSecurityService = userSecurityService;
+        this.notifyEventService = notifyEventService;
+        this.roleService = roleService;
+        this.modelPasswordValidator = modelPasswordValidator;
+        this.modelUserValidator = modelUserValidator;
+        this.notifyService = notifyService;
+        this.editProfileValidator = editProfileValidator;
+    }
+
 	@RequestMapping(value="/list-user", method = RequestMethod.GET)
 	public String manageUser(Model model) {
 		List<User> listUser = userService.findAll();
@@ -140,7 +136,7 @@ public class UserController {
 		return "redirect:/";
 	}
 	@RequestMapping(value="/edit-user/{emailUser}/", method = RequestMethod.GET)
-	public String viewUser(Model model, @PathVariable("emailUser") String email, HttpSession session){
+	public String viewUser(@PathVariable("emailUser") String email, HttpSession session){
 		User user = userService.findOne(email);
 		if(user == null){
 			throw new UserNotFoundException();
@@ -171,7 +167,7 @@ public class UserController {
 		return "userManager";
 	}
 	@RequestMapping(value="/remove-user/{emailUser}/", method = RequestMethod.GET)
-	public String removeUserRedirect(Model model, HttpSession session, @PathVariable("emailUser") String emailUser) {
+	public String removeUserRedirect(HttpSession session, @PathVariable("emailUser") String emailUser) {
 		session.setAttribute("emailUserDelete", emailUser);
 		return "redirect:/remove-user";
 	}
@@ -194,19 +190,15 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/edit-user", method = RequestMethod.POST)
-	public String EditUserPOST(Model model, @ModelAttribute("User") ModelUser modelUser
-			, HttpSession session) {
+	public String EditUserPOST(@ModelAttribute("User") ModelUser modelUser
+            , HttpSession session) {
 		String email = (String) session.getAttribute("emailUser");
 		User usernow = getUser();
 		if(usernow.getEmail().equals(email)){
 			return "redirect:/edit-profile";
 		}
 		User user = userService.findOne(email);
-		System.out.println("roleid = " + modelUser.getRoleID());
-		System.out.println("roleid = " + user.getRoleUser().getRoleID());
 		Role role = roleService.findOne(modelUser.getRoleID());
-		System.out.println(role != null);
-		System.out.println(user.getRoleUser().getRoleID() != role.getRoleID());
 		if(role != null && user.getRoleUser().getRoleID() != modelUser.getRoleID())
 		{	System.out.println("set role");
 			user.setRoleUser(role);
@@ -269,7 +261,7 @@ public class UserController {
 	@RequestMapping(value = "/change-password", method = RequestMethod.GET)
     public String showChangePasswordPage(Model model, @RequestParam("email") String email, 
     		@RequestParam("token") String token){
-		if(email == null || email == "" || token == "" || token == null){
+		if(StringUtils.isEmpty(email) || StringUtils.isEmpty(token)){
 			return "redirect:/login";
 		}
 		System.out.println("email = " + email + ", token = " + token);
@@ -320,25 +312,7 @@ public class UserController {
 			model.addAttribute("listNotify",listNotify);
 		else
 			model.addAttribute("listNotify", notifyEventService.getListNotifyNewest(getUser()).subList(0, 5));
-		model.addAttribute("calendar", createCalendar(month,year));
-	}
-	public String createCalendar(String month, String year){
-		System.out.println(month+"xx" + year);
-		Calendar now = Calendar.getInstance();
-		int y,m;
-		if(month == null || year == null)
-		{
-			m = now.get(Calendar.MONTH);
-			y = now.get(Calendar.YEAR);
-			now.set(y, m, 1);
-		}else{
-			now.clear();
-			y = Integer.parseInt(year);
-			m = Integer.parseInt(month);
-			now.set(y, m, 1);
-		}
-		String html = new ModelCalendar().createCalendar(y, m, now);
-		return html;
+		model.addAttribute("calendar", calendarService.createCalendar(month,year));
 	}
 	public UserDetails getUserLogin() {
 		return (UserDetails)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -349,8 +323,7 @@ public class UserController {
 	
 	// check user has Authority
 	public boolean checkUserhasAuthority(String Authority) {
-		UserDetails x ;
-		SecurityContextHolder.getContext().getAuthentication().getPrincipal() ;
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal() ;
 		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(Authority));
 	}
 }

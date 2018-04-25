@@ -1,10 +1,8 @@
 package com.tlcn.service;
 
-import java.util.Arrays;
-import java.util.Calendar;
-
-import javax.transaction.Transactional;
-
+import com.tlcn.dao.PasswordResetTokenRespository;
+import com.tlcn.model.PasswordResetToken;
+import com.tlcn.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,14 +10,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.tlcn.dao.PasswordResetTokenRespository;
-import com.tlcn.model.PasswordResetToken;
-import com.tlcn.model.User;
+import java.util.Calendar;
+import java.util.Collections;
 
 @Service
 public class UserSecurityService {
-	@Autowired
-    private PasswordResetTokenRespository passwordResetTokenRespository;
+    @Autowired
+	private PasswordResetTokenRespository passwordResetTokenRespository;
+
+
 
     public String validatePasswordResetToken(String email, String token) {
         PasswordResetToken passToken = passwordResetTokenRespository.findByToken(token);
@@ -38,7 +37,7 @@ public class UserSecurityService {
         System.out.println("Give autho");
         User user = passToken.getUser();
         Authentication auth = new UsernamePasswordAuthenticationToken(user, 
-        		null, Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD")));
+        		null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD")));
         SecurityContextHolder.getContext()
             .setAuthentication(auth);
         return null;

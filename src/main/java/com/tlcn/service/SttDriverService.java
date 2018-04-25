@@ -11,12 +11,10 @@ import com.tlcn.model.SttDriver;
 
 @Service
 public class SttDriverService {
-	@Autowired
+    @Autowired
 	private SttDriverRepository sttDriverRepository;
 
-	public SttDriverService() {
-		super();
-	}
+
 	
 	public SttDriver findOne(int sttdriverID){
 		return sttDriverRepository.findOne(sttdriverID);

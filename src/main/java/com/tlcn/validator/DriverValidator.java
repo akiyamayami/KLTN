@@ -16,9 +16,14 @@ import com.tlcn.service.UserService;
 @Component
 public class DriverValidator implements Validator{
 
-	@Autowired
-	private UserService userService;
-	@Override
+	private final UserService userService;
+
+    @Autowired
+    public DriverValidator(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
 		return Driver.class.equals(clazz);
@@ -39,7 +44,7 @@ public class DriverValidator implements Validator{
 			if(Calendar.getInstance().getTime().getTime() < driver.getBirthday().getTime())
 				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "birthday", "greaterThanToDay.Driver.birthday");
 		}
-		boolean userExist = userService.findAll().parallelStream().filter(u -> u.getEmail().equals(driver.getEmail())).findFirst().isPresent();
+		boolean userExist = userService.findAll().parallelStream().anyMatch(u -> u.getEmail().equals(driver.getEmail()));
 		if(userExist){
 			errors.rejectValue("email", "EmailExist.User.email");
 		}
@@ -47,7 +52,7 @@ public class DriverValidator implements Validator{
 		if(file != null)
 		{
 			String name = driver.getFile().getOriginalFilename();
-			String ext = null;
+			String ext;
 			ext = name.substring(name.lastIndexOf(".")+1,name.length()).toLowerCase();
 			System.out.println(ext);
 			if(!ext.equals("") && (ext.equals(name) || !ext.equals("jpg")))

@@ -1,30 +1,27 @@
 package com.tlcn.validator;
 
-import java.util.Calendar;
-import java.util.Date;
-
+import com.tlcn.dto.ModelCreateorChangeProposal;
+import com.tlcn.model.Car;
+import com.tlcn.model.Proposal;
+import com.tlcn.service.CarService;
+import com.tlcn.service.ProposalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.tlcn.dto.ModelCreateorChangeProposal;
-import com.tlcn.model.Car;
-import com.tlcn.model.Proposal;
-import com.tlcn.service.CarService;
-import com.tlcn.service.ProposalService;
+import java.util.Calendar;
 
 @Component
 public class ProposalValidator implements Validator{
-
-	@Autowired
+    @Autowired
 	private ProposalService propsosalService;
-	
-	@Autowired
+    @Autowired
 	private CarService carService;
-	
-	@Override
+
+
+    @Override
 	public boolean supports(Class<?> arg0) {
 		return ModelCreateorChangeProposal.class.equals(arg0);	
 	}
@@ -40,11 +37,11 @@ public class ProposalValidator implements Validator{
 		
 		if(x.getUsefromdate() != null && x.getUsetodate() != null && x.getUsefromtime() != null && x.getUsetotime() != null)
 		{
-			startDate = propsosalService.getDate(x.getUsefromdate(),x.getUsefromtime());
-			long today = now.getTime().getTime();
-			endDate = propsosalService.getDate(x.getUsetodate(),x.getUsetotime());
-			boolean startDateBiggerThanToday = (startDate > today) ? true : false;
-			boolean endDateBiggerThanStartDate = (endDate > startDate ) ? true :false;
+			startDate = carService.getDate(x.getUsefromdate(),x.getUsefromtime());
+			long today = System.currentTimeMillis();
+			endDate = carService.getDate(x.getUsetodate(),x.getUsetotime());
+			boolean startDateBiggerThanToday = startDate > today;
+			boolean endDateBiggerThanStartDate = endDate > startDate;
 			if(!startDateBiggerThanToday || !endDateBiggerThanStartDate)
 				errors.rejectValue("usefromdate", "WrongDate.Proposal.usedate");
 			if(x.getPickuptime() != null)
@@ -53,7 +50,7 @@ public class ProposalValidator implements Validator{
 		}
 		Car car = carService.findOne(x.getCarID());
 		boolean isCarNotUsedYet = carService.findListCarAvailableInTime(startDate, endDate).parallelStream()
-				.filter(c -> c.getCarID() == car.getCarID()).findFirst().isPresent();
+				.anyMatch(c -> c.getCarID() == car.getCarID());
 		if(proposal != null){
 			if (!isCarNotUsedYet && proposal.getCar().getCarID() != car.getCarID()) {
 				errors.rejectValue("carID", "CarAlreadyUsed.Proposal.carID");
@@ -66,7 +63,7 @@ public class ProposalValidator implements Validator{
 		}
 		
 		String name = x.getFile().getOriginalFilename();
-		String ext = null;
+		String ext;
 		if(x.getFile().getSize() > 0)
 		{
 			ext = name.substring(name.lastIndexOf(".")+1,name.length()).toLowerCase();

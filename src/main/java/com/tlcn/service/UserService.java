@@ -1,17 +1,15 @@
 package com.tlcn.service;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.tlcn.dao.PasswordResetTokenRespository;
+import com.tlcn.dao.UserRespository;
+import com.tlcn.dto.ModelLogin;
+import com.tlcn.dto.ModelUser;
+import com.tlcn.model.PasswordResetToken;
+import com.tlcn.model.Right;
+import com.tlcn.model.Role;
+import com.tlcn.model.User;
+import com.tlcn.runnable.SendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,34 +21,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tlcn.dao.PasswordResetTokenRespository;
-import com.tlcn.dao.UserRespository;
-import com.tlcn.dto.ModelLogin;
-import com.tlcn.dto.ModelUser;
-import com.tlcn.model.PasswordResetToken;
-import com.tlcn.model.Right;
-import com.tlcn.model.Role;
-import com.tlcn.model.User;
-import com.tlcn.runnable.SendEmail;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService{
-	@Autowired
-	private UserRespository userRespository;
+    @Autowired
+	private  UserRespository userRespository;
+    @Autowired
+	private  RoleService roleService;
+    @Autowired
+	private  NotifyService notifyService;
+    @Autowired
+	private  PasswordEncoder passworndEcoder;
+    @Autowired
+	private  PasswordResetTokenRespository passwordResetTokenRespository;
 
-	@Autowired
-	private RoleService roleService;	
-	
-	@Autowired
-	private NotifyService notifyService;
-	
-	@Autowired
-	private PasswordEncoder passworndEcoder;
-	
-	@Autowired
-	private PasswordResetTokenRespository passwordResetTokenRespository;
-	
-	@Override
+
+    @Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		User userInfo = userRespository.findOne(username.toLowerCase());
         System.out.println("UserInfo= " + userInfo);
@@ -58,15 +52,14 @@ public class UserService implements UserDetailsService{
         if (userInfo == null) {
             throw new UsernameNotFoundException("User " + username + " was not found in the database");
         }    
-        List<Role> x = new ArrayList<Role>();
+        List<Role> x = new ArrayList<>();
         x.add(userInfo.getRoleUser());
         System.out.println("password = " + userInfo.getPassword());
-        UserDetails userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(userInfo.getEmail(),
+        return new org.springframework.security.core.userdetails.User(userInfo.getEmail(),
                 userInfo.getPassword(),getAuthorities(x));
-		return userDetails;
 	}
 	
-	private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
+	private Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
         return getGrantedAuthorities(getPrivileges(roles));
     }
 	public void remove(User user){
@@ -81,7 +74,7 @@ public class UserService implements UserDetailsService{
 		}
 		return false;
 	}
-	public List<User> getListBGMAndPTBVT(){
+	List<User> getListBGMAndPTBVT(){
 		return userRespository.getListBGMAndPTBVT();
 	}
 	public ModelUser converToShow(User user){
@@ -98,9 +91,9 @@ public class UserService implements UserDetailsService{
 //		notifyService.SendMailSTMP(listuser,message,"New Password");
 		userRespository.save(user);
 	}
-	private final List<String> getPrivileges(final Collection<Role> roles) {
-        final List<String> privileges = new ArrayList<String>();
-        final List<Right> collection = new ArrayList<Right>();
+	private List<String> getPrivileges(final Collection<Role> roles) {
+        final List<String> privileges = new ArrayList<>();
+        final List<Right> collection = new ArrayList<>();
         for (final Role role : roles) {
             collection.addAll(role.getListRight());
         }
@@ -116,8 +109,8 @@ public class UserService implements UserDetailsService{
         passwordResetTokenRespository.save(myToken);
     }
 	
-	private final List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
-        final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	private List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
+        final List<GrantedAuthority> authorities = new ArrayList<>();
         for (final String privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }
@@ -172,7 +165,7 @@ public class UserService implements UserDetailsService{
 		}
 	}
 	
-	public UserDetails getUserLogin() {
+	private UserDetails getUserLogin() {
 		return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	
@@ -187,7 +180,7 @@ public class UserService implements UserDetailsService{
 	}
 	
 	//API 
-	public PasswordEncoder encoder() {
+    private PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder(11);
 	}
 	public boolean checkLogin(ModelLogin user) {
@@ -196,10 +189,6 @@ public class UserService implements UserDetailsService{
 		if(userCheck == null) {
 			return false;
 		}
-		else if(encoder().matches(user.getPassword(), userCheck.getPassword()))
-		{
-			return true;
-		}
-		return false;
-	}
+		else return encoder().matches(user.getPassword(), userCheck.getPassword());
+    }
 }

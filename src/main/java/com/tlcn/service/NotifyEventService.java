@@ -1,31 +1,27 @@
 package com.tlcn.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.tlcn.dao.NotifyEventRepository;
 import com.tlcn.dto.ModelShowNotify;
 import com.tlcn.model.Car;
 import com.tlcn.model.NotifyEvent;
 import com.tlcn.model.Proposal;
 import com.tlcn.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class NotifyEventService {
-	@Autowired
-	private NotifyEventRepository notifyEventRepository;
-	@Autowired
-	private ProposalService proposalService;
-	@Autowired
-	private UserService userService;
-	public NotifyEventService() {
-		super();
-	}
+    @Autowired
+	private  NotifyEventRepository notifyEventRepository;
+    @Autowired
+    private  UserService userService;
+    @Autowired
+	private  CarService carService;
+
 	
 	public List<ModelShowNotify> getListNotifyNewest(User user){
 		List<ModelShowNotify> listnotify = new ArrayList<>();
@@ -41,10 +37,10 @@ public class NotifyEventService {
 	
 	public String getMoreNotify(int currentIndex, User user){
 		List<ModelShowNotify> listNotify = getListNotifyNewest(user);
-		String html = "";
+		StringBuilder html = new StringBuilder();
 		System.out.println(currentIndex + " = " + listNotify.size());
 		if(currentIndex == listNotify.size()){
-			return html;
+			return html.toString();
 		}
 		if(currentIndex + 6 >= listNotify.size()){
 			listNotify = listNotify.subList(currentIndex, listNotify.size());
@@ -53,17 +49,15 @@ public class NotifyEventService {
 		}
 		if(userService.checkUserhasAuthority("CONFIRM_PROPOSAL")){
 			for(ModelShowNotify notify : listNotify){
-				html += "<tr><td><div class='item-notify2'><a href='confirm-proposal-" + notify.getProposalID() + "'>"
-						+ notify.getMessage() + notify.getTime() + "</p></a></div></tr></td>";
+				html.append("<tr><td><div class='item-notify2'><a href='confirm-proposal-").append(notify.getProposalID()).append("'>").append(notify.getMessage()).append(notify.getTime()).append("</p></a></div></tr></td>");
 			}
 		}
 		else{
 			for(ModelShowNotify notify : listNotify){
-				html += "<tr><td><div class='item-notify2'><a href='change-proposal-" + notify.getProposalID() + "'>"
-						+ notify.getMessage() + notify.getTime() + "</p></a></div></tr></td>";
+				html.append("<tr><td><div class='item-notify2'><a href='change-proposal-").append(notify.getProposalID()).append("'>").append(notify.getMessage()).append(notify.getTime()).append("</p></a></div></tr></td>");
 			}
 		}
-		return html;
+		return html.toString();
 	}
 	public void addNotifyforUser(Proposal proposal, User user, String type){
 		NotifyEvent notify = new NotifyEvent(Calendar.getInstance(),proposal, user);
@@ -77,7 +71,7 @@ public class NotifyEventService {
 					.forEach(u -> addNotifyforUser(proposal,u,""));
 	}
 	
-	public String generateMessageNotify(NotifyEvent notify, boolean isUser,String type){
+	private String generateMessageNotify(NotifyEvent notify, boolean isUser, String type){
 		boolean isProposalConfirm = (notify.getNotifyOfProposal().getStt().getSttproposalID() == 1);
 		boolean typeProposalisCancel = (notify.getNotifyOfProposal().getType().getTypeID() == 3);
 		String message = ""; 
@@ -155,10 +149,10 @@ public class NotifyEventService {
 	}
 	public void SendNotifyChange(Car car,String type, long timeNow){
 		car.getListproposal().parallelStream()
-		.filter(p -> p.getType().getTypeID() != 3 && proposalService.getDate(p.getUsefromdate(),p.getUsefromtime()) > timeNow)
+		.filter(p -> p.getType().getTypeID() != 3 && carService.getDate(p.getUsefromdate(),p.getUsefromtime()) > timeNow)
 		.forEach(p -> addNotifyforUser(p,p.getUserregister().getUser(),type));
 	}
-	public String getIconOfType(String type){
+	private String getIconOfType(String type){
 		switch(type){
 			case "Tạo":
 				return "fa-plus-circle";

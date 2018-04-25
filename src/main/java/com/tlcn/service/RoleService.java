@@ -11,10 +11,12 @@ import com.tlcn.model.Role;
 
 @Service
 public class RoleService {
-	@Autowired
-	private RoleRepository roleRepository;
-	
-	public List<Role> findAll(){
+    @Autowired
+	private  RoleRepository roleRepository;
+
+
+
+    public List<Role> findAll(){
 		List<Role> roles = new ArrayList<>();
 		for(Role role : roleRepository.findAll()){
 			roles.add(role);

@@ -8,12 +8,10 @@ import com.tlcn.model.RegisterProposal;
 
 @Service
 public class RegisterProposalService {
-	@Autowired
+    @Autowired
 	private RegisterProposalRespository registerProposalRepository;
 
-	public RegisterProposalService() {
-		super();
-	}
+
 	
 	public void save(RegisterProposal register){
 		registerProposalRepository.save(register);

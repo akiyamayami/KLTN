@@ -1,12 +1,10 @@
 package com.tlcn.controller;
 
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.List;
-
+import com.tlcn.dto.ModelShowNotify;
+import com.tlcn.service.NotifyEventService;
+import com.tlcn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,28 +13,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tlcn.dto.ModelShowNotify;
-import com.tlcn.service.NotifyEventService;
-import com.tlcn.service.ProposalService;
-import com.tlcn.service.UserService;
-
-import net.sf.jasperreports.engine.JRException;
+import java.util.List;
 
 
 @Controller
 @Component
 public class MainController {
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private ProposalService proposalService;
-	@Autowired
-	private NotifyEventService notifyEventService;
+	private final UserService userService;
+    private final NotifyEventService notifyEventService;
 	
 	
-	public MainController() {
+	@Autowired
+    public MainController(UserService userService, NotifyEventService notifyEventService) {
 		super();
-	}
+        this.userService = userService;
+        this.notifyEventService = notifyEventService;
+    }
 	@RequestMapping(value="/show-all-notify", method = RequestMethod.GET)
 	public String showAllNotify(Model model){
 		model.addAttribute("MODE", "MODE_SHOW_ALL_NOTIFY");
@@ -49,13 +41,13 @@ public class MainController {
 	}
 	@RequestMapping(value="/show-all-notify", method = RequestMethod.POST)
 	@ResponseBody
-	public String getMoreNotify(Model model,@RequestParam("numberNotify") int numberNotify){
+	public String getMoreNotify(@RequestParam("numberNotify") int numberNotify){
 		return notifyEventService.getMoreNotify(numberNotify, userService.GetUser());
 	}
 	
 	// page Login
 	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String Login(Principal user){
+	public String Login(){
 		return "Login";
 	}
 	

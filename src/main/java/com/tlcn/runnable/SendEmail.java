@@ -35,7 +35,7 @@ public class SendEmail implements Runnable{
 			sendmail(user.getEmail(),message,header);
 		}
 	}
-	public void sendmail(String To,String Text, String Header)
+	private void sendmail(String To, String Text, String Header)
 	{
 		try {
 			Properties props = new Properties();
@@ -49,11 +49,11 @@ public class SendEmail implements Runnable{
 			Session session = Session.getDefaultInstance(props,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication("akiyamayami2@gmail.com","1900561558");
+						return new PasswordAuthentication("14110107@student.hcmute.edu.vn","1900561558");
 					}
 				});
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("akiyamayami2@gmail.com"));
+			message.setFrom(new InternetAddress("14110107@student.hcmute.edu.vn"));
 			message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(To));
 			message.setSubject(Header);

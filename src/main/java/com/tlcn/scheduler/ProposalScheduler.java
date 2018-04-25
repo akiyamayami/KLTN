@@ -1,19 +1,17 @@
 package com.tlcn.scheduler;
 
-import java.util.Calendar;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.tlcn.dao.PasswordResetTokenRespository;
-import com.tlcn.model.NotifyEvent;
 import com.tlcn.model.Proposal;
 import com.tlcn.service.NotifyEventService;
 import com.tlcn.service.ProposalService;
 import com.tlcn.service.SttProposalService;
 import com.tlcn.service.TypeProposalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.Calendar;
+import java.util.List;
 @Component
 public class ProposalScheduler {
 	@Autowired
