@@ -279,6 +279,7 @@ public class ProposalService {
 
 	
 	public boolean isInTimeUse(Proposal proposal){
+        System.out.println("proposal " + proposal.getProposalID() + "checking time in use");
 		long timeStart = carService.getDate(proposal.getUsefromdate(),proposal.getUsefromtime());
 		long today = System.currentTimeMillis();
 		long timeEnd = carService.getDate(proposal.getUsetodate(),proposal.getUsetotime());
