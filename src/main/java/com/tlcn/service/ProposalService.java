@@ -195,7 +195,7 @@ public class ProposalService {
 		if(filter.getStt() != null){
 			sttID = Integer.parseInt(filter.getStt());
 		}
-		if(StringUtils.isEmpty(filter.getType()))
+		if(!StringUtils.isEmpty(filter.getType()))
 			typeNumber = Integer.parseInt(filter.getType());
 		TypeProposal type = null;
 		if(typeNumber != 0){

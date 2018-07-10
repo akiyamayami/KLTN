@@ -1,17 +1,14 @@
-
-
 #include <ESP8266WiFi.h>
 #include <FirebaseArduino.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
-#include "third-party/arduino-json-5.6.7/include/ArduinoJson.h"
-
+#include <ArduinoJson.h>
 
 
 #define FIREBASE_HOST "testfb-6251e.firebaseio.com"
 #define FIREBASE_AUTH "9Xbvqil0hbtX4MG9QOw5ATlkkEeEceL17AzxzxbM"
-#define WIFI_SSID "qweasd" // Cô đổi thành tên wifi của cô
-#define WIFI_PASSWORD "anhkhongbiet" // đây là pass wifi
+#define WIFI_SSID "11_01" // Cô đổi thành tên wifi của cô
+#define WIFI_PASSWORD "1234567890" // đây là pass wifi
 
 //#define WIFI_SSID "xxx"
 //#define WIFI_PASSWORD "12345678"

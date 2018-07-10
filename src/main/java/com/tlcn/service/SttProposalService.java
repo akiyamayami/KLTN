@@ -11,8 +11,6 @@ public class SttProposalService {
     @Autowired
 	private SttProposalRespository sttProposalRespository;
 
-
-	
 	public SttProposal findOne(int sttproposalID){
 		return sttProposalRespository.findOne(sttproposalID);
 	}
