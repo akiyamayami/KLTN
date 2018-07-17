@@ -39,12 +39,10 @@
             <div class="col-sm-9">
                 <div class="main-content">
                     <c:choose>
-                    <c:when
-                            test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
+                    <c:when test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
                     <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
                     <div class="title-content">
-                        <div class="row">Tìm đề nghị
-                        </div>
+                        <div class="row">Tìm đề nghị</div>
                         </c:if>
                         <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
                             <div class="title-content">
@@ -224,11 +222,9 @@
                                     </ul>
                                 </nav>
                             </div>
-
                         </div>
                         </c:when>
-                        <c:when
-                                test='${MODE == "MODE_CREATE_PROPOSAL" || MODE == "MODE_CHANGE_PROPOSAL"}'>
+                        <c:when test='${MODE == "MODE_CREATE_PROPOSAL" || MODE == "MODE_CHANGE_PROPOSAL"}'>
                             <c:if test='${MODE == "MODE_CREATE_PROPOSAL"}'>
                                 <div class="title-content">Tạo Đề nghị</div>
                             </c:if>
@@ -919,16 +915,17 @@
         </div>
     </div>
     <t:footer></t:footer>
+</div>
 
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
 
 
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="static/js/validate.js"></script>
-    <script type="text/javascript" src="static/js/main.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="static/js/validate.js"></script>
+<script type="text/javascript" src="static/js/main.js"></script>
 </body>
 </html>
