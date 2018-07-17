@@ -39,190 +39,197 @@
             <div class="col-sm-9">
                 <div class="main-content">
                     <c:choose>
-                    <c:when test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
-                    <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
-                    <div class="title-content">
-                        <div class="row">Tìm đề nghị</div>
-                        </c:if>
-                        <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
-                            <div class="title-content">
-                                <div class="row">
-                                    Đề nghị của tôi
-                                    <div class="col-sm-1" style="float: right; margin-top: 3px;">
-                                        <a href="/create-proposal" data-toggle="tooltip"
-                                           data-placement="top" title="Tạo đề nghị"><i
-                                                class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
+                        <c:when test='${MODE == "MODE_FIND_PROPOSAL" || MODE == "MODE_FIND_MY_PROPOSAL"}'>
+                            <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
+                                <div class="title-content">
+                                    <div class="row">Tìm đề nghị</div>
+                                </div>
+                            </c:if>
+                            <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
+                                <div class="title-content">
+                                    <div class="row">
+                                        Đề nghị của tôi
+                                        <div class="col-sm-1" style="float: right; margin-top: 3px;">
+                                            <a href="/create-proposal" data-toggle="tooltip"
+                                               data-placement="top" title="Tạo đề nghị"><i
+                                                    class="fa fa-plus fa-lg" aria-hidden="true"></i></a>
+                                        </div>
                                     </div>
                                 </div>
+                            </c:if>
+                            <div class="title-content2">
+                                <form:form method="post" modelAttribute="filter-model"
+                                           action="/" class="form-inline form-filer-data">
+                                    <div class="form-group">
+                                        <label class="control-label">Ngày :</label>
+                                        <form:input path="datecreate" type="text"
+                                                    class="form-control date-picker2"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Loại :</label>
+                                        <form:select path="type" class="form-control set-height-25">
+                                            <form:option value="0">Tất cả</form:option>
+                                            <form:option value="1">Tạo</form:option>
+                                            <form:option value="2">Chỉnh sửa</form:option>
+                                            <form:option value="3">Hủy</form:option>
+                                        </form:select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Tình trạng :</label>
+                                        <form:select path="stt" class="form-control set-height-25">
+                                            <form:option value="-1">Tất cả</form:option>
+                                            <form:option value="1">Đã duyệt</form:option>
+                                            <form:option value="0">Chưa duyệt</form:option>
+                                        </form:select>
+                                    </div>
+                                    <div style="float: right;">
+                                        <button type="submit" class="btn btn-default set-height-25">Lọc</button>
+                                        <a id="cancel-filter" class="myClickableThingy"> <i
+                                                class="fa fa-times fa-lg" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </form:form>
                             </div>
-                        </c:if>
-                        <div class="title-content2">
-                            <form:form method="post" modelAttribute="filter-model"
-                                       action="/" class="form-inline form-filer-data">
-                                <div class="form-group">
-                                    <label class="control-label">Ngày :</label>
-                                    <form:input path="datecreate" type="text"
-                                                class="form-control date-picker2"/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Loại :</label>
-                                    <form:select path="type" class="form-control set-height-25">
-                                        <form:option value="0">Tất cả</form:option>
-                                        <form:option value="1">Tạo</form:option>
-                                        <form:option value="2">Chỉnh sửa</form:option>
-                                        <form:option value="3">Hủy</form:option>
-                                    </form:select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Tình trạng :</label>
-                                    <form:select path="stt" class="form-control set-height-25">
-                                        <form:option value="-1">Tất cả</form:option>
-                                        <form:option value="1">Đã duyệt</form:option>
-                                        <form:option value="0">Chưa duyệt</form:option>
-                                    </form:select>
-                                </div>
-                                <div style="float: right;">
-                                    <button type="submit" class="btn btn-default set-height-25">Lọc</button>
-                                    <a id="cancel-filter" class="myClickableThingy"> <i
-                                            class="fa fa-times fa-lg" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </form:form>
-                        </div>
-                        <table cellpadding="0" cellspacing="0"
-                               class="table table-striped table-content"
-                               style="border-bottom: 1px solid #e3e3e3; margin-bottom: 0px;">
-                            <thead>
-                            <tr>
-                                <th style="width: 5%;">STT</th>
-                                <th style="width: 16%;">Tên</th>
-                                <th style="width: 20%;">Thời gian sử dụng</th>
-                                <th style="width: 10%;">Ngày tạo</th>
-                                <th style="width: 10%;">Loại</th>
-                                <th style="width: 10%;">Tình Trạng</th>
-                                <th style="width: 7%;" class="last-item-table">Chi tiết</th>
-                                <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
-                                    <th style="width: 5%;" class="last-item-table">Sửa</th>
-                                    <th style="width: 5%;" class="last-item-table">Hủy</th>
-                                </c:if>
-                                <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
-                                    <th style="width: 5%;" class="last-item-table">Xem</th>
-                                </c:if>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach items="${listProposal}" var="list" varStatus="stt">
+                            <table cellpadding="0" cellspacing="0"
+                                   class="table table-striped table-content"
+                                   style="border-bottom: 1px solid #e3e3e3; margin-bottom: 0px;">
+                                <thead>
                                 <tr>
-                                    <td>${stt.index + 1 }</td>
-                                    <td><c:out value="${list.name}"/></td>
-                                    <td><c:out value="${list.usefromdate}"/> đến <c:out
-                                            value="${list.usetodate}"/></td>
-                                    <td><c:out value="${list.userregister.dateregister}"/></td>
-                                    <td><c:out value="${list.type.name}"/></td>
-                                    <td><c:out value="${list.stt.name}"/></td>
-                                    <td class="last-item-table"><a
-                                            class="myClickableThingy" data-toggle="tooltip"
-                                            data-placement="right" data-html="true"
-                                            title='<c:out value="${list.detail}"/>'> <i
-                                            class="fa fa-info-circle fa-lg" aria-hidden="true"></i>
-                                    </a></td>
-
+                                    <th style="width: 5%;">STT</th>
+                                    <th style="width: 16%;">Tên</th>
+                                    <th style="width: 20%;">Thời gian sử dụng</th>
+                                    <th style="width: 10%;">Ngày tạo</th>
+                                    <th style="width: 10%;">Loại</th>
+                                    <th style="width: 10%;">Tình Trạng</th>
+                                    <th style="width: 7%;" class="last-item-table">Chi tiết</th>
                                     <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
-                                        <td class="last-item-table"><a
-                                                href="/change-proposal-${list.proposalID}"> <i
-                                                class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-                                        </a></td>
-                                        <td class="last-item-table"><c:if
-                                                test="${ !list.expired && list.type.typeID != 3}">
-                                            <a href="/cancel-proposal-${list.proposalID}"> <i
-                                                    class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
-                                            </a>
-                                        </c:if></td>
+                                        <th style="width: 5%;" class="last-item-table">Sửa</th>
+                                        <th style="width: 5%;" class="last-item-table">Hủy</th>
                                     </c:if>
                                     <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
-                                        <th style="width: 5%;" class="last-item-table"><a
-                                                href="/confirm-proposal-${list.proposalID}"> <i
-                                                class="fa fa-pencil" aria-hidden="true"></i>
-                                        </a></th>
+                                        <th style="width: 5%;" class="last-item-table">Xem</th>
                                     </c:if>
                                 </tr>
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <nav class="pull-right">
-                                    <ul class="pagination justify-content-end">
-                                        <c:choose>
-                                            <c:when test="${pageNumber != 1}">
-                                                <li class="page-item"><a class="page-link"
-                                                                         href="?page=${pageNumber - 1}" tabindex="-1">Previous</a>
-                                                </li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="page-item disabled"><a class="page-link"
-                                                                                  href="#" tabindex="-1">Previous</a>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when test="${pageNumber == 1}">
-                                                <c:forEach var="i" begin="${pageNumber}"
-                                                           end="${(numberOfPages < 3)? numberOfPages : 3 }">
-                                                    <c:choose>
-                                                        <c:when test="${i == pageNumber}">
-                                                            <li class="page-item active"><a
-                                                                    class="page-link myClickableThingy">${i}</a></li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li class="page-item"><a class="page-link"
-                                                                                     href="?page=${i}">${i}</a></li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </c:when>
-                                            <c:when test="${pageNumber ==  numberOfPages}">
-                                                <c:forEach var="i"
-                                                           begin="${(numberOfPages < 3)? 1 : numberOfPages - 3}"
-                                                           end="${pageNumber}">
-                                                    <c:choose>
-                                                        <c:when test="${i == pageNumber}">
-                                                            <li class="page-item active"><a
-                                                                    class="page-link myClickableThingy">${i}</a></li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li class="page-item"><a class="page-link"
-                                                                                     href="?page=${i}">${i}</a></li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="page-item"><a class="page-link"
-                                                                         href="?page=${pageNumber - 1 }">${pageNumber - 1 }</a>
-                                                </li>
-                                                <li class="page-item active"><a
-                                                        class="page-link myClickableThingy">${pageNumber}</a></li>
-                                                <li class="page-item"><a class="page-link"
-                                                                         href="?page=${pageNumber + 1 }">${pageNumber + 1 }</a>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <c:choose>
-                                            <c:when
-                                                    test="${pageNumber ==  numberOfPages || numberOfPages == 1}">
-                                                <li class="page-item disabled"><a class="page-link"
-                                                                                  href="#">Next</a></li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li class="page-item"><a class="page-link"
-                                                                         href="?page=${pageNumber + 1 }">Next</a></li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </ul>
-                                </nav>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${listProposal}" var="list" varStatus="stt">
+                                    <tr>
+                                        <td>${stt.index + 1 }</td>
+                                        <td><c:out value="${list.name}"/></td>
+                                        <td><c:out value="${list.usefromdate}"/> đến <c:out
+                                                value="${list.usetodate}"/></td>
+                                        <td><c:out value="${list.userregister.dateregister}"/></td>
+                                        <td><c:out value="${list.type.name}"/></td>
+                                        <td><c:out value="${list.stt.name}"/></td>
+                                        <td class="last-item-table"><a
+                                                class="myClickableThingy" data-toggle="tooltip"
+                                                data-placement="right" data-html="true"
+                                                title='<c:out value="${list.detail}"/>'> <i
+                                                class="fa fa-info-circle fa-lg" aria-hidden="true"></i>
+                                        </a></td>
+
+                                        <c:if test="${MODE == 'MODE_FIND_MY_PROPOSAL'}">
+                                            <td class="last-item-table"><a
+                                                    href="/change-proposal-${list.proposalID}"> <i
+                                                    class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+                                            </a></td>
+                                            <td class="last-item-table"><c:if
+                                                    test="${ !list.expired && list.type.typeID != 3}">
+                                                <a href="/cancel-proposal-${list.proposalID}"> <i
+                                                        class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                                                </a>
+                                            </c:if></td>
+                                        </c:if>
+                                        <c:if test="${MODE == 'MODE_FIND_PROPOSAL'}">
+                                            <th style="width: 5%;" class="last-item-table"><a
+                                                    href="/confirm-proposal-${list.proposalID}"> <i
+                                                    class="fa fa-pencil" aria-hidden="true"></i>
+                                            </a></th>
+                                        </c:if>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <nav class="pull-right">
+                                        <ul class="pagination justify-content-end">
+                                            <c:choose>
+                                                <c:when test="${pageNumber != 1}">
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="?page=${pageNumber - 1}"
+                                                                             tabindex="-1">Previous</a>
+                                                    </li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li class="page-item disabled"><a class="page-link"
+                                                                                      href="#"
+                                                                                      tabindex="-1">Previous</a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${pageNumber == 1}">
+                                                    <c:forEach var="i" begin="${pageNumber}"
+                                                               end="${(numberOfPages < 3)? numberOfPages : 3 }">
+                                                        <c:choose>
+                                                            <c:when test="${i == pageNumber}">
+                                                                <li class="page-item active"><a
+                                                                        class="page-link myClickableThingy">${i}</a>
+                                                                </li>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <li class="page-item"><a class="page-link"
+                                                                                         href="?page=${i}">${i}</a></li>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:when test="${pageNumber ==  numberOfPages}">
+                                                    <c:forEach var="i"
+                                                               begin="${(numberOfPages < 3)? 1 : numberOfPages - 3}"
+                                                               end="${pageNumber}">
+                                                        <c:choose>
+                                                            <c:when test="${i == pageNumber}">
+                                                                <li class="page-item active"><a
+                                                                        class="page-link myClickableThingy">${i}</a>
+                                                                </li>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <li class="page-item"><a class="page-link"
+                                                                                         href="?page=${i}">${i}</a></li>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="?page=${pageNumber - 1 }">${pageNumber - 1 }</a>
+                                                    </li>
+                                                    <li class="page-item active"><a
+                                                            class="page-link myClickableThingy">${pageNumber}</a></li>
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="?page=${pageNumber + 1 }">${pageNumber + 1 }</a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when
+                                                        test="${pageNumber ==  numberOfPages || numberOfPages == 1}">
+                                                    <li class="page-item disabled"><a class="page-link"
+                                                                                      href="#">Next</a></li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="?page=${pageNumber + 1 }">Next</a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
-                        </div>
+
                         </c:when>
                         <c:when test='${MODE == "MODE_CREATE_PROPOSAL" || MODE == "MODE_CHANGE_PROPOSAL"}'>
                             <c:if test='${MODE == "MODE_CREATE_PROPOSAL"}'>
@@ -907,14 +914,14 @@
                                 </tbody>
                             </table>
                         </c:when>
-                        </c:choose>
-                    </div>
+                    </c:choose>
                 </div>
             </div>
-            <t:notifyandcalendar></t:notifyandcalendar>
         </div>
+        <t:notifyandcalendar></t:notifyandcalendar>
     </div>
-    <t:footer></t:footer>
+</div>
+<t:footer></t:footer>
 </div>
 
 <script type="text/javascript"
