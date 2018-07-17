@@ -917,12 +917,11 @@
                     </c:choose>
                 </div>
             </div>
+            <t:notifyandcalendar></t:notifyandcalendar>
         </div>
-        <t:notifyandcalendar></t:notifyandcalendar>
     </div>
 </div>
 <t:footer></t:footer>
-</div>
 
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
