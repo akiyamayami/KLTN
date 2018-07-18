@@ -38,7 +38,7 @@ public class UserController {
 	
 	private final UserService userService;
 
-    @Qualifier("messageSource")
+    @Autowired
 	private MessageSource messages;
 
 	private final CalendarService calendarService;

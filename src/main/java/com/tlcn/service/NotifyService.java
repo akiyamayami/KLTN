@@ -18,7 +18,7 @@ public class NotifyService {
 	@Autowired
     private Environment env;
 
-    @Qualifier("messageSource")
+    @Autowired
 	private MessageSource messages;
 	
 	
