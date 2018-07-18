@@ -68,7 +68,7 @@ public class NotifyEventService {
 		save(notify);
 	}
 	public void addNotifyToBGMAndPTBVT(Proposal proposal){
-		userService.getListBGMAndPTBVT().parallelStream().filter(user -> proposal.getInfoconfirm() != null && !proposal.getInfoconfirm().getUserconfirm().getEmail().equals(user.getEmail()))
+		userService.getListBGMAndPTBVT().parallelStream().filter(user -> !(proposal.getInfoconfirm() != null && proposal.getInfoconfirm().getUserconfirm().getEmail().equals(user.getEmail())))
 					.forEach(u -> addNotifyforUser(proposal,u,""));
 	}
 	
