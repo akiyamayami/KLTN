@@ -139,6 +139,9 @@ public class DriverService {
                 // khi có thêm xe mới/xóa xe cũ ...vv..v.
                 List<Car> listCarRemove = new ArrayList<>();
                 for (Car c : d.getListcar()) {
+                    if (c.getCarID() == 0){
+                        d.getListcar().remove(c);
+                    }
                     System.out.println(c.getCarID());
                 }
                 System.out.println("size :" + driver.getListcar().size());
