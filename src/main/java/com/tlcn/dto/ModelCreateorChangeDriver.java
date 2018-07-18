@@ -1,5 +1,6 @@
 package com.tlcn.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,18 +14,18 @@ import com.tlcn.model.Car;
 
 public class ModelCreateorChangeDriver {
 	private String email;
-	private String name;
+	private String name = "";
 	
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date birthday;
-	private String phone;
+	private String phone = "";
 	private int experience;
-	private String license;
-	private String address;
+	private String license = "";
+	private String address = "";
 	
 	private int sttdriverID;
-	private List<Car> listcar;
+	private List<Car> listcar = new ArrayList<>();
 	private MultipartFile file;
 	
 	
