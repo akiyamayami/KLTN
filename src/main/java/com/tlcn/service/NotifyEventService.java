@@ -1,5 +1,6 @@
 package com.tlcn.service;
 
+import com.tlcn.Const.Const;
 import com.tlcn.dao.NotifyEventRepository;
 import com.tlcn.dto.ModelShowNotify;
 import com.tlcn.model.Car;
@@ -61,13 +62,13 @@ public class NotifyEventService {
 	}
 	public void addNotifyforUser(Proposal proposal, User user, String type){
 		NotifyEvent notify = new NotifyEvent(Calendar.getInstance(),proposal, user);
-		notify.setMessage(generateMessageNotify(notify, true, type));
+		notify.setMessage(generateMessageNotify(notify, user.getRoleUser().getRoleID() == Const.User.NORMAL, type));
 		if(type.equals("CancelProposalExpired"))
 			notify.setNotifyOfProposal(null);
 		save(notify);
 	}
 	public void addNotifyToBGMAndPTBVT(Proposal proposal){
-		userService.getListBGMAndPTBVT().parallelStream()
+		userService.getListBGMAndPTBVT().parallelStream().filter(user -> !proposal.getInfoconfirm().getUserconfirm().getEmail().equals(user.getEmail()))
 					.forEach(u -> addNotifyforUser(proposal,u,""));
 	}
 	
